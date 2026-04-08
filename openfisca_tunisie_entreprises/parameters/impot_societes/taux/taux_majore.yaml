@@ -1,0 +1,21 @@
+description: >
+  Taux d'IS majoré applicable aux établissements de crédit, sociétés d'assurance
+  et de réassurance, sociétés de leasing, sociétés de factoring, sociétés de
+  recouvrement de créances, opérateurs de réseaux de télécommunication et
+  sociétés exerçant l'activité de jeux (depuis LF 2021).
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 49 (1er alinéa) du Code de l'IRPP et de l'IS"
+    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
+    - "Note commune n° 6/2021"
+
+values:
+  1994-01-01:
+    value: 0.45
+  2014-01-01:
+    value: 0.35
+  # LF 2021 : maintien à 35 % avec extension du champ d'application (jeux)
+  2021-01-01:
+    value: 0.35

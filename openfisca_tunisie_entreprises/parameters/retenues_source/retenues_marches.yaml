@@ -1,0 +1,17 @@
+description: >
+  Taux de retenue à la source sur les paiements effectués par l'État,
+  les collectivités locales et les entreprises publiques au titre de
+  marchés, commandes et prestations.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 52-I-4° du Code de l'IRPP et de l'IS"
+
+taux:
+  description: Taux RS sur marchés de l'État
+  values:
+    1990-01-01:
+      value: 0.025
+    2014-01-01:
+      value: 0.03

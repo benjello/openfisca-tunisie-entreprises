@@ -1,0 +1,78 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61"]
+
+[project]
+name = "openfisca_tunisie_entreprises"
+version = "0.1.0"
+description = "OpenFisca Rules as Code — fiscalité des entreprises en Tunisie (IS, TCL, TFP, FOPROLOS)."
+readme = "README.md"
+keywords = ["microsimulation", "tax", "tunisia", "entreprise", "IS", "rules-as-code"]
+authors = []
+maintainers = []
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: POSIX",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "openfisca-core[web-api] >=44",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.2",
+    "ruff>=0.6.9,<1",
+    "yamllint>=1.35.1",
+]
+
+[tool.setuptools.packages.find]
+include = ["openfisca_tunisie_entreprises", "openfisca_tunisie_entreprises.*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+lint.select = ["ALL"]
+lint.ignore = [
+    "ANN",     # Type annotations non exigées
+    "ARG002",  # Arguments inutilisés (convention OpenFisca : entity, period, parameters)
+    "COM812",  # Virgule finale (conflit avec le formateur)
+    "ERA001",  # Code commenté
+    "FIX002",  # Commentaires TODO
+    "N801",    # Nom de classe en CapWords (les sous-classes Variable utilisent des minuscules)
+    "N803",    # Nom d'argument en minuscules (convention OpenFisca : Entreprise, Etablissement)
+    "N805",    # Premier argument d'une méthode (les formules utilisent le nom de l'entité)
+    "N806",    # Variable en minuscules dans une fonction
+    "PLR0913", # Trop d'arguments
+    "SLF001",  # Accès à un membre privé
+]
+lint.pydocstyle.convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"openfisca_tunisie_entreprises/variables/**/*.py" = ["D101", "D102"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["openfisca_tunisie_entreprises"]
+
+[tool.pytest.ini_options]
+addopts = "--exitfirst --showlocals --doctest-modules --disable-warnings --import-mode importlib"
+testpaths = ["openfisca_tunisie_entreprises/tests"]
+python_files = "**/*.py"
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+]
+
+[dependency-groups]
+dev = [
+    "openfisca_tunisie_entreprises",
+    "pytest>=8.3.2",
+    "ruff>=0.6.9,<1",
+    "yamllint>=1.35.1",
+]

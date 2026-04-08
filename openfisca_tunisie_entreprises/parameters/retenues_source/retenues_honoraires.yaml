@@ -1,0 +1,17 @@
+description: >
+  Taux de retenue à la source applicable aux honoraires, commissions, courtages et
+  loyers versés à des personnes morales résidentes établissant leur revenu selon le
+  régime réel.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 52 du Code de l'IRPP et de l'IS"
+
+taux:
+  description: Taux de retenue à la source sur honoraires (personnes morales)
+  values:
+    1990-01-01:
+      value: 0.025
+    2014-01-01:
+      value: 0.03

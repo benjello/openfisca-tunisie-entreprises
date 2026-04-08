@@ -1,0 +1,24 @@
+description: >
+  Taxe de Formation Professionnelle (TFP).
+  Assise sur la masse salariale brute des employés résidents.
+  Le taux varie selon le secteur d'activité.
+  Une déduction est possible à concurrence des dépenses de formation
+  effectivement engagées et justifiées.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 35 à 39 de la loi n° 88-145 du 31 décembre 1988 portant loi de finances pour 1989"
+    - "Art. 29 du Code de l'IRPP et de l'IS (intégration dans le code)"
+
+taux_industrie:
+  description: Taux applicable aux entreprises du secteur industriel
+  values:
+    1989-01-01:
+      value: 0.01
+
+taux_autres_secteurs:
+  description: Taux applicable aux autres secteurs (services, commerce, BTP, etc.)
+  values:
+    1989-01-01:
+      value: 0.02

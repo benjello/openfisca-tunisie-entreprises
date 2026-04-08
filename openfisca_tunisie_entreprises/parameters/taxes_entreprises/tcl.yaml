@@ -1,0 +1,24 @@
+description: >
+  Taxe sur les établissements à caractère industriel, commercial ou professionnel (TCL).
+  Assise sur le chiffre d'affaires brut local (hors export) de chaque établissement.
+  Perçue au profit des collectivités locales.
+
+metadata:
+  unit: /1
+  reference:
+    - "Loi n° 97-11 du 3 février 1997 (art. 45 et s.)"
+    - "Code de la fiscalité locale"
+
+taux:
+  description: Taux de la TCL sur le chiffre d'affaires brut local
+  values:
+    1997-01-01:
+      value: 0.002
+
+minimum_annuel:
+  description: Montant minimum de TCL dû par établissement (en DT)
+  metadata:
+    unit: currency
+  values:
+    1997-01-01:
+      value: 100.0

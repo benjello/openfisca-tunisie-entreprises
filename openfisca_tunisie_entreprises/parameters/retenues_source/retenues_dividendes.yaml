@@ -1,0 +1,21 @@
+description: >
+  Taux de retenue à la source applicable aux dividendes et revenus assimilés
+  distribués par les sociétés résidentes à leurs actionnaires résidents.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 52-I-5° du Code de l'IRPP et de l'IS"
+    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
+    - "Note commune n° 6/2021"
+
+taux:
+  description: Taux RS sur dividendes
+  values:
+    1990-01-01:
+      value: 0.05
+    2017-01-01:
+      value: 0.05
+    # LF 2021 : relèvement de 5 % à 10 %
+    2021-01-01:
+      value: 0.10

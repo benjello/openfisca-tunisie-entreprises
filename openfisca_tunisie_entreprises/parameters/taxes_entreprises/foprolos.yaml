@@ -1,0 +1,15 @@
+description: >
+  Contribution au Fonds de Promotion des Logements pour les Salariés (FOPROLOS).
+  Assise sur la masse salariale brute de tous les salariés.
+
+metadata:
+  unit: /1
+  reference:
+    - "Loi n° 77-56 du 3 août 1977 portant création du FOPROLOS"
+    - "Art. 28 du Code de l'IRPP et de l'IS"
+
+taux:
+  description: Taux de la contribution FOPROLOS
+  values:
+    1977-01-01:
+      value: 0.01

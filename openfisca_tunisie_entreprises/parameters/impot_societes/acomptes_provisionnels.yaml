@@ -1,0 +1,15 @@
+description: >
+  Taux de chaque acompte provisionnel d'IS.
+  L'IS est acquitté par anticipation via trois acomptes (25 juin, 25 septembre,
+  25 décembre) calculés sur la base de l'IS de l'exercice précédent.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 51 du Code de l'IRPP et de l'IS"
+
+taux_acompte:
+  description: Part de l'IS N-1 exigible à chacune des trois échéances
+  values:
+    1990-01-01:
+      value: 0.30

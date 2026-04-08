@@ -1,0 +1,22 @@
+description: >
+  Taux de retenue à la source applicable aux loyers versés à des personnes physiques
+  (revenus fonciers) ou à des personnes morales.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 52 du Code de l'IRPP et de l'IS"
+
+taux_personnes_physiques:
+  description: Taux RS sur loyers versés à des personnes physiques
+  values:
+    1990-01-01:
+      value: 0.15
+
+taux_personnes_morales:
+  description: Taux RS sur loyers versés à des personnes morales (IS)
+  values:
+    1990-01-01:
+      value: 0.05
+    2014-01-01:
+      value: 0.15

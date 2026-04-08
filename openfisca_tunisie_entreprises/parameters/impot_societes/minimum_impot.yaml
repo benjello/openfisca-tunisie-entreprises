@@ -1,0 +1,16 @@
+description: >
+  Minimum d'impôt sur les sociétés (TMI — Taux Minimum d'Imposition).
+  Exprimé en pourcentage du chiffre d'affaires brut (ventes + prestations).
+  L'IS dû ne peut être inférieur à ce minimum, sauf régimes d'exonération.
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 49 ter du Code de l'IRPP et de l'IS"
+    - "Art. 12 de la loi de finances n° 2012-27 (LF 2013)"
+    - "Note commune n° 8/2013"
+
+values:
+  # Instauré par la LF 2013
+  2013-01-01:
+    value: 0.002

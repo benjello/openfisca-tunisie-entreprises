@@ -1,0 +1,23 @@
+description: >
+  Taux d'IS de droit commun applicable aux sociétés résidentes.
+  Modifié par la loi de finances pour 2021 (passage de 25 % à 15 %).
+
+metadata:
+  unit: /1
+  reference:
+    - "Art. 49 du Code de l'IRPP et de l'IS"
+    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
+
+values:
+  # Taux historique avant LF 1994
+  1990-01-01:
+    value: 0.40
+  # LF 1994 : abaissement à 35 %
+  1994-01-01:
+    value: 0.35
+  # LF 2014 : abaissement à 25 %
+  2014-01-01:
+    value: 0.25
+  # LF 2021 : abaissement à 15 %
+  2021-01-01:
+    value: 0.15
