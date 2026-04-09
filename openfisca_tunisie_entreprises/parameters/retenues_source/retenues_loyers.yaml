@@ -5,7 +5,18 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Art. 52 du Code de l'IRPP et de l'IS"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 52 CIRPPIS"
+    2014-01-01:
+      title: "Loi de finances n° 2013-54 du 30/12/2013, Art. 52 CIRPPIS (relèvement taux PM)"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    2014-01-01: "2013-12-30"
+  notes:
+    1990-01-01:
+    - title: "Taux initial RS loyers : 15 % pour les PP, 5 % pour les PM"
+    2014-01-01:
+    - title: "Relèvement du taux PM de 5 % à 15 %, alignement sur le taux PP"
 
 taux_personnes_physiques:
   description: Taux RS sur loyers versés à des personnes physiques

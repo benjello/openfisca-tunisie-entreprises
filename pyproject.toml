@@ -73,6 +73,7 @@ filterwarnings = [
 dev = [
     "openfisca_tunisie_entreprises",
     "pytest>=8.3.2",
+    "pytest-cov>=7.1.0",
     "ruff>=0.6.9,<1",
     "yamllint>=1.35.1",
 ]

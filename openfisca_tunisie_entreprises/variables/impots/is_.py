@@ -110,11 +110,13 @@ class taux_is_applicable(Variable):
                 categorie == CategorieIS.majore,
                 categorie == CategorieIS.normal,
                 categorie == CategorieIS.reduit,
+                categorie == CategorieIS.intermediaire,
             ],
             [
                 taux.taux_majore,
                 taux.taux_normal,
                 taux.taux_reduit,
+                taux.taux_intermediaire,
             ],
             default=taux.taux_normal,
         )
@@ -165,13 +167,27 @@ class tmi(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Taux Minimum d'Imposition (TMI) = CA brut × 0,2 %"
-    reference = "Art. 49 ter CIRPPIS ; Note commune n° 8/2013"
+    label = "Taux Minimum d'Imposition (TMI) : 0,2 %/500 DT (régime général) ou 0,1 %/300 DT (taux IS 10 %)"
+    reference = "Art. 49-II CIRPPIS ; Art. 14-16 LF 2020-46 ; Note commune n° 8/2013"
 
     def formula(entreprise, period, parameters):
         ca_brut = entreprise("chiffre_affaires_brut", period)
-        taux_mini = parameters(period).impot_societes.minimum_impot
-        return ca_brut * taux_mini
+        categorie = entreprise("categorie_is", period)
+        p = parameters(period).impot_societes
+
+        est_taux_reduit = categorie == CategorieIS.reduit
+
+        taux_mini = np.where(
+            est_taux_reduit,
+            p.minimum_impot_taux_reduit,
+            p.minimum_impot,
+        )
+        minimum_absolu = np.where(
+            est_taux_reduit,
+            p.minimum_impot_absolu_taux_reduit,
+            p.minimum_impot_absolu,
+        )
+        return np.maximum(ca_brut * taux_mini, minimum_absolu)
 
 
 class tmi_est_applicable(Variable):

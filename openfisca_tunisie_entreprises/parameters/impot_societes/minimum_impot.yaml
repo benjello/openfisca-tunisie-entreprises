@@ -1,16 +1,20 @@
 description: >
-  Minimum d'impôt sur les sociétés (TMI — Taux Minimum d'Imposition).
-  Exprimé en pourcentage du chiffre d'affaires brut (ventes + prestations).
-  L'IS dû ne peut être inférieur à ce minimum, sauf régimes d'exonération.
+  Taux du minimum d'imposition IS (TMI — Taux Minimum d'Imposition).
+  Calculé sur le chiffre d'affaires brut (ventes + prestations de services).
+  L'IS annuel dû ne peut être inférieur à ce minimum, sauf régimes d'exonération.
+  Applicable à compter de la quatrième année d'activité effective.
 
 metadata:
   unit: /1
   reference:
-    - "Art. 49 ter du Code de l'IRPP et de l'IS"
-    - "Art. 12 de la loi de finances n° 2012-27 (LF 2013)"
-    - "Note commune n° 8/2013"
+    2013-01-01:
+      title: "Loi de finances n° 2012-27 du 29/12/2012, Art. 12 — Art. 49 ter CIRPPIS"
+  official_journal_date:
+    2013-01-01: "2012-12-29"
+  notes:
+    2013-01-01:
+    - title: "Création du TMI à 0,2 % du CA brut. Note commune DGI n° 8/2013. Applicable à partir de la 4e année d'activité."
 
 values:
-  # Instauré par la LF 2013
   2013-01-01:
     value: 0.002

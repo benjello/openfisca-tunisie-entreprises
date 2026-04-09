@@ -5,8 +5,18 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Loi n° 77-56 du 3 août 1977 portant création du FOPROLOS"
-    - "Art. 28 du Code de l'IRPP et de l'IS"
+    1977-01-01:
+      title: "Loi n° 77-56 du 03/08/1977 portant création du FOPROLOS"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 28 CIRPPIS (codification)"
+  official_journal_date:
+    1977-01-01: "1977-08-03"
+    1990-01-01: "1989-12-30"
+  notes:
+    1977-01-01:
+    - title: "Création du Fonds de Promotion des Logements pour les Salariés (FOPROLOS). Taux fixé à 1 % de la masse salariale brute."
+    1990-01-01:
+    - title: "Intégration de la contribution FOPROLOS dans le Code de l'IRPP et de l'IS (Art. 28 CIRPPIS)"
 
 taux:
   description: Taux de la contribution FOPROLOS

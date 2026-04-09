@@ -8,8 +8,18 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Art. 35 à 39 de la loi n° 88-145 du 31 décembre 1988 portant loi de finances pour 1989"
-    - "Art. 29 du Code de l'IRPP et de l'IS (intégration dans le code)"
+    1989-01-01:
+      title: "Loi n° 88-145 du 31/12/1988 portant loi de finances pour 1989, Art. 35 à 39"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 29 CIRPPIS (codification)"
+  official_journal_date:
+    1989-01-01: "1988-12-31"
+    1990-01-01: "1989-12-30"
+  notes:
+    1989-01-01:
+    - title: "Création de la TFP : taux 1 % pour l'industrie, 2 % pour les autres secteurs. Possibilité de déduire les dépenses de formation engagées."
+    1990-01-01:
+    - title: "Intégration de la TFP dans le Code de l'IRPP et de l'IS (Art. 29 CIRPPIS)"
 
 taux_industrie:
   description: Taux applicable aux entreprises du secteur industriel

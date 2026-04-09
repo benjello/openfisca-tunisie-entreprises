@@ -1,21 +1,33 @@
 description: >
-  Taux d'IS majoré applicable aux établissements de crédit, sociétés d'assurance
-  et de réassurance, sociétés de leasing, sociétés de factoring, sociétés de
-  recouvrement de créances, opérateurs de réseaux de télécommunication et
-  sociétés exerçant l'activité de jeux (depuis LF 2021).
+  Taux d'IS majoré applicable aux banques, établissements financiers, sociétés
+  d'assurance et de réassurance (y compris mutuelles et takaful).
+  LF 2025 (LF 2024-48 du 09/12/2024) : relèvement de 35 % à 40 %.
 
 metadata:
   unit: /1
   reference:
-    - "Art. 49 (1er alinéa) du Code de l'IRPP et de l'IS"
-    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
-    - "Note commune n° 6/2021"
+    1994-01-01:
+      title: "Loi de finances n° 93-125 du 27/12/1993, Art. 49-I-3 et 49-I-4 CIRPPIS"
+    2014-01-01:
+      title: "Loi de finances n° 2013-54 du 30/12/2013, Art. 49-I CIRPPIS"
+    2024-01-01:
+      title: "Loi de finances n° 2024-48 du 09/12/2024, Art. 37-2 — Art. 49-I CIRPPIS"
+  official_journal_date:
+    1994-01-01: "1993-12-27"
+    2014-01-01: "2013-12-30"
+    2024-01-01: "2024-12-09"
+  notes:
+    1994-01-01:
+    - title: "Taux initial pour banques et assurances : 45 %"
+    2014-01-01:
+    - title: "Abaissement de 45 % à 35 %"
+    2024-01-01:
+    - title: "Relèvement de 35 % à 40 % pour banques, établissements financiers et assurances. Les télécoms, grandes surfaces et concessionnaires maintiennent le taux intermédiaire de 35 %."
 
 values:
   1994-01-01:
     value: 0.45
   2014-01-01:
     value: 0.35
-  # LF 2021 : maintien à 35 % avec extension du champ d'application (jeux)
-  2021-01-01:
-    value: 0.35
+  2024-01-01:
+    value: 0.40

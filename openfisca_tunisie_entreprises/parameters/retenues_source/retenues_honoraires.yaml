@@ -1,17 +1,45 @@
 description: >
-  Taux de retenue à la source applicable aux honoraires, commissions, courtages et
-  loyers versés à des personnes morales résidentes établissant leur revenu selon le
-  régime réel.
+  Taux de retenue à la source applicable aux honoraires, commissions et courtages
+  versés à des personnes morales ou physiques résidentes établissant leur revenu
+  selon le régime réel.
 
 metadata:
   unit: /1
   reference:
-    - "Art. 52 du Code de l'IRPP et de l'IS"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 52-I-a CIRPPIS"
+    2014-01-01:
+      title: "Loi de finances n° 2013-54 du 30/12/2013, Art. 52-I-a CIRPPIS (relèvement PM)"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 14-5 — Art. 52-I-a CIRPPIS (taux PP réduit à 10 %)"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    2014-01-01: "2013-12-30"
+    2021-01-01: "2020-12-23"
+  notes:
+    1990-01-01:
+    - title: "Taux initial RS honoraires PM : 2,5 %. Taux PP : 15 %."
+    2014-01-01:
+    - title: "Relèvement du taux PM de 2,5 % à 3 %"
+    2021-01-01:
+    - title: "Réduction du taux PP de 15 % à 10 % pour les honoraires versés à des personnes physiques au régime réel"
 
 taux:
-  description: Taux de retenue à la source sur honoraires (personnes morales)
+  description: Taux de retenue à la source sur honoraires (personnes morales IS)
   values:
     1990-01-01:
       value: 0.025
     2014-01-01:
       value: 0.03
+
+taux_personnes_physiques:
+  description: >
+    Taux de retenue à la source sur honoraires versés à des personnes physiques
+    soumises à l'IR selon le régime réel.
+    15 % jusqu'en 2020 (Art. 52-I-a CIRPPIS) ; réduit à 10 % à compter du 1er
+    janvier 2021 (Art. 14-5 LF 2020-46 du 23/12/2020).
+  values:
+    1990-01-01:
+      value: 0.15
+    2021-01-01:
+      value: 0.10

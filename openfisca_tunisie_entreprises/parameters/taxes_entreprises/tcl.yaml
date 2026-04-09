@@ -6,8 +6,13 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Loi n° 97-11 du 3 février 1997 (art. 45 et s.)"
-    - "Code de la fiscalité locale"
+    1997-01-01:
+      title: "Loi n° 97-11 du 03/02/1997, Art. 45 et suivants — Code de la fiscalité locale"
+  official_journal_date:
+    1997-01-01: "1997-02-03"
+  notes:
+    1997-01-01:
+    - title: "Création de la TCL à 0,2 % du CA brut local, avec un minimum de 100 DT par établissement. Affectée au budget des collectivités locales."
 
 taux:
   description: Taux de la TCL sur le chiffre d'affaires brut local

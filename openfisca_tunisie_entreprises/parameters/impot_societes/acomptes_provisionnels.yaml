@@ -6,7 +6,13 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Art. 51 du Code de l'IRPP et de l'IS"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989 portant promulgation du CIRPPIS, Art. 51"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+  notes:
+    1990-01-01:
+    - title: "Trois acomptes provisionnels de 30 % chacun de l'IS de l'exercice précédent, exigibles les 25 juin, 25 septembre et 25 décembre. Le solde est dû dans les trois mois de la clôture de l'exercice."
 
 taux_acompte:
   description: Part de l'IS N-1 exigible à chacune des trois échéances

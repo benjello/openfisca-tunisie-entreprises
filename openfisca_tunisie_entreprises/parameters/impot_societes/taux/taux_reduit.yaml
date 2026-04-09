@@ -1,18 +1,21 @@
 description: >
-  Taux d'IS réduit applicable aux entreprises individuelles, aux sociétés de
-  personnes et à certains secteurs prioritaires (agriculture, pêche, artisanat,
+  Taux d'IS réduit de 10 % applicable aux entreprises individuelles, aux sociétés
+  de personnes et à certains secteurs prioritaires (agriculture, pêche, artisanat,
   première transformation de produits agricoles, etc.).
+  Introduit par la LF 2021 en remplacement du régime IRPP barème progressif pour
+  ces entités.
 
 metadata:
   unit: /1
   reference:
-    - "Art. 49 (3e alinéa) du Code de l'IRPP et de l'IS"
-    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
-    - "Note commune n° 6/2021"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 19 — Art. 49 (3e alinéa) CIRPPIS"
+  official_journal_date:
+    2021-01-01: "2020-12-23"
+  notes:
+    2021-01-01:
+    - title: "Création du taux IS réduit de 10 % pour entreprises individuelles et sociétés de personnes (auparavant soumises au barème progressif IRPP). Note commune DGI n° 6/2021."
 
 values:
-  # Avant LF 2021, les entreprises individuelles et sociétés de personnes
-  # étaient soumises au barème progressif de l'IRPP, pas à l'IS.
-  # Le taux de 10 % pour l'IS des entreprises individuelles date de la LF 2021.
   2021-01-01:
     value: 0.10

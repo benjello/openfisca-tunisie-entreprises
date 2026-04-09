@@ -1,23 +1,48 @@
 description: >
   Taux d'IS de droit commun applicable aux sociétés résidentes.
-  Modifié par la loi de finances pour 2021 (passage de 25 % à 15 %).
+  LF 2021 : abaissement de 25 % à 15 %.
+  LF 2025 (LF 2024-48 du 09/12/2024) : relèvement de 15 % à 20 %, applicable
+  aux bénéfices réalisés à partir du 1er janvier 2024.
 
 metadata:
   unit: /1
   reference:
-    - "Art. 49 du Code de l'IRPP et de l'IS"
-    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989 portant promulgation du CIRPPIS, Art. 49-I"
+    1994-01-01:
+      title: "Loi de finances n° 93-125 du 27/12/1993, Art. 49-I CIRPPIS"
+    2014-01-01:
+      title: "Loi de finances n° 2013-54 du 30/12/2013, Art. 49-I CIRPPIS"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 14-1 — Art. 49-I CIRPPIS"
+    2024-01-01:
+      title: "Loi de finances n° 2024-48 du 09/12/2024, Art. 37-1 — Art. 49-I CIRPPIS"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    1994-01-01: "1993-12-27"
+    2014-01-01: "2013-12-30"
+    2021-01-01: "2020-12-23"
+    2024-01-01: "2024-12-09"
+  notes:
+    1990-01-01:
+    - title: "Taux initial du CIRPPIS : 40 %"
+    1994-01-01:
+    - title: "Abaissement de 40 % à 35 %"
+    2014-01-01:
+    - title: "Abaissement de 35 % à 25 %"
+    2021-01-01:
+    - title: "Abaissement de 25 % à 15 %. Note commune DGI n° 6/2021."
+    2024-01-01:
+    - title: "Relèvement de 15 % à 20 %, applicable aux bénéfices réalisés à partir du 01/01/2024"
 
 values:
-  # Taux historique avant LF 1994
   1990-01-01:
     value: 0.40
-  # LF 1994 : abaissement à 35 %
   1994-01-01:
     value: 0.35
-  # LF 2014 : abaissement à 25 %
   2014-01-01:
     value: 0.25
-  # LF 2021 : abaissement à 15 %
   2021-01-01:
     value: 0.15
+  2024-01-01:
+    value: 0.20

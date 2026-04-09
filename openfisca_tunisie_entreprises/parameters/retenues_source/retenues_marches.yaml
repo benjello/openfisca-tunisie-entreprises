@@ -1,17 +1,45 @@
 description: >
-  Taux de retenue à la source sur les paiements effectués par l'État,
-  les collectivités locales et les entreprises publiques au titre de
-  marchés, commandes et prestations.
+  Taux de retenue à la source sur les acquisitions de marchandises, matériel,
+  équipements et services d'un montant égal ou supérieur à 1 000 DT TTC,
+  effectuées par l'État, les collectivités locales, les personnes morales et
+  les personnes physiques soumises au régime réel.
+  Taux réduit applicable lorsque le bénéficiaire est une PM soumise à l'IS
+  au taux normal (20 % depuis LF 2025).
 
 metadata:
   unit: /1
   reference:
-    - "Art. 52-I-4° du Code de l'IRPP et de l'IS"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 52-I-g CIRPPIS"
+    2014-01-01:
+      title: "Loi de finances n° 2013-54 du 30/12/2013, Art. 51-1 — Art. 52-I-g CIRPPIS"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 14-6 et 14-16 — Art. 52-I-g CIRPPIS"
+    2025-01-01:
+      title: "Loi de finances n° 2024-48 du 09/12/2024, Art. 37-8 — Art. 52-I-g CIRPPIS"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    2014-01-01: "2013-12-30"
+    2021-01-01: "2020-12-23"
+    2025-01-01: "2024-12-09"
+  notes:
+    1990-01-01:
+    - title: "Taux initial RS marchés : 2,5 %"
+    2014-01-01:
+    - title: "Relèvement à 1,5 % pour les acquisitions ≥ 1 000 DT TTC. Création de la RS marchés de l'État dans sa forme actuelle."
+    2021-01-01:
+    - title: "Réduction à 1 % pour les PM soumises à l'IS au taux normal, dans le cadre de la baisse du taux IS à 15 %"
+    2025-01-01:
+    - title: "Adaptation suite au relèvement du taux IS normal à 20 % (LF 2025)"
 
 taux:
-  description: Taux RS sur marchés de l'État
+  description: >
+    Taux RS applicable aux acquisitions de marchandises/services ≥ 1 000 DT TTC
+    pour les bénéficiaires PM soumises à l'IS au taux normal.
   values:
     1990-01-01:
       value: 0.025
     2014-01-01:
-      value: 0.03
+      value: 0.015
+    2021-01-01:
+      value: 0.01

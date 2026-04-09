@@ -39,22 +39,33 @@ class FormeJuridique(Enum):
 class CategorieIS(Enum):
     """Catégorie déterminant le taux d'IS applicable.
 
-    Depuis la loi de finances 2021 (art. 49 CIRPPIS) :
-    - majore  : 35 % — établissements de crédit, assurances, leasing, factoring,
-                       recouvrement de créances, télécommunications, jeux.
-    - normal  : 15 % — sociétés résidentes de droit commun.
-    - reduit  : 10 % — entreprises individuelles et sociétés de personnes ;
-                       certains secteurs prioritaires (agriculture, artisanat,
-                       première transformation des produits agricoles, etc.).
+    Quatre catégories depuis la loi de finances 2025 (LF 2024-48 du 09/12/2024) :
+
+    - majore        : 40 % (depuis LF 2025) — banques, établissements financiers
+                      (hors établissements de paiement), sociétés d'assurance et de
+                      réassurance (y compris mutuelles et takaful).
+    - normal        : 20 % (depuis LF 2025, 15 % de LF 2021 à LF 2024) — sociétés
+                      résidentes de droit commun.
+    - reduit        : 10 % — artisanat, agriculture, pêche, zones de développement
+                      régional (après période d'exonération), etc.
+    - intermediaire : 35 % (stable) — établissements de paiement, sociétés
+                      d'investissement, sociétés de recouvrement de créances,
+                      opérateurs de réseaux de télécommunications, grandes surfaces
+                      commerciales, concessionnaires automobiles, franchisés d'une
+                      marque étrangère.
+
+    Indices entiers (utilisés dans les tests) :
+        majore=0  normal=1  reduit=2  intermediaire=3
 
     Références :
-    - Art. 49 du Code de l'IRPP et de l'IS (modifié par LF 2021, LF 2023, LF 2024).
-    - Note commune n° 6/2021 relative aux modifications introduites par la LF 2021.
+    - Art. 49-I du Code de l'IRPP et de l'IS.
+    - Art. 37-1 à 37-3 de la loi de finances n° 2024-48 du 09/12/2024.
     """
 
-    majore = "Taux majoré (35 %)"
-    normal = "Taux normal (15 %)"
-    reduit = "Taux réduit (10 %)"
+    majore = "Taux majoré 40 % (banques, assurances)"
+    normal = "Taux normal 20 %"
+    reduit = "Taux réduit 10 %"
+    intermediaire = "Taux intermédiaire 35 % (télécoms, grandes surfaces, etc.)"
 
 
 class SecteurActivite(Enum):

@@ -5,17 +5,23 @@ description: >
 metadata:
   unit: /1
   reference:
-    - "Art. 52-I-5° du Code de l'IRPP et de l'IS"
-    - "Art. 19 de la loi de finances n° 2020-46 du 23 décembre 2020 (LF 2021)"
-    - "Note commune n° 6/2021"
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 52-I-5° CIRPPIS"
+    2018-01-01:
+      title: "Loi de finances n° 2017-66 du 18/12/2017, Art. 46 — Art. 52-I-5° CIRPPIS"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    2018-01-01: "2017-12-18"
+  notes:
+    1990-01-01:
+    - title: "Taux initial RS dividendes : 5 %"
+    2018-01-01:
+    - title: "Relèvement de 5 % à 10 %, applicable aux revenus distribués à partir du 01/01/2018. Note commune DGI n° 6/2021 pour précisions d'application."
 
 taux:
   description: Taux RS sur dividendes
   values:
     1990-01-01:
       value: 0.05
-    2017-01-01:
-      value: 0.05
-    # LF 2021 : relèvement de 5 % à 10 %
-    2021-01-01:
+    2018-01-01:
       value: 0.10
