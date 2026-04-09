@@ -1,0 +1,58 @@
+description: >
+  Avance sur impôt due à l'importation de produits de consommation figurant sur
+  la liste fixée par décret (décret n° 96-500 du 25/03/1996).
+  Assiette : valeur en douane des produits majorée des droits et taxes exigibles.
+  L'avance est imputable sur les acomptes provisionnels puis sur l'IS dû.
+
+metadata:
+  unit: /1
+  reference:
+    1996-01-01:
+      title: "Loi de finances n° 95-109 du 25/12/1995, Art. 47 — Art. 51 ter CIRPPIS"
+    2018-01-01:
+      title: "Loi de finances n° 2018-56 du 27/12/2018, Art. 41 (relèvement temporaire à 15 %)"
+    2020-01-01:
+      title: "Loi de finances n° 2019-78 du 23/12/2019 (retour à 10 % à compter de 2020)"
+    2024-01-01:
+      title: "Décret-loi n° 2022-79 (taux majoré 15 % pour non-conformité déclaration électronique, applicable à compter du 01/01/2024)"
+  official_journal_date:
+    1996-01-01: "1995-12-25"
+    2018-01-01: "2018-12-27"
+    2020-01-01: "2019-12-23"
+    2024-01-01: "2022-12-31"
+  notes:
+    1996-01-01:
+    - title: "Création de l'avance à l'importation à 10 % sur les produits de consommation. Décret d'application n° 96-500 du 25/03/1996 fixant la liste des produits concernés."
+    2018-01-01:
+    - title: "Relèvement temporaire à 15 % pour les années 2018 et 2019 afin de renforcer la collecte fiscale"
+    2020-01-01:
+    - title: "Retour au taux de 10 % à compter du 01/01/2020"
+    2024-01-01:
+    - title: "Majoration à 15 % pour les importateurs non conformes à l'obligation de déclaration et paiement électroniques"
+
+taux:
+  description: >
+    Taux de droit commun de l'avance à l'importation (entreprises conformes).
+    10 % depuis 1996 ; relevé à 15 % pour 2018-2019 ; retour à 10 % à compter de 2020.
+  values:
+    1996-01-01:
+      value: 0.10
+    2018-01-01:
+      value: 0.15
+    2020-01-01:
+      value: 0.10
+
+taux_non_conforme:
+  description: >
+    Taux majoré applicable aux entreprises n'ayant pas souscrit leur déclaration
+    fiscale par voie électronique ou ne respectant pas l'obligation de paiement
+    électronique (décret-loi n° 2022-79, applicable à compter du 1er janvier 2024).
+  values:
+    1996-01-01:
+      value: 0.10
+    2018-01-01:
+      value: 0.15
+    2020-01-01:
+      value: 0.10
+    2024-01-01:
+      value: 0.15

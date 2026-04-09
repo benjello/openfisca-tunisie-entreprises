@@ -1,0 +1,22 @@
+description: >
+  Régime fiscal des investissements directs dans l'agriculture et la pêche.
+  Exonération totale d'IS pendant 10 ans à compter de la date d'entrée en
+  activité effective, puis déduction des deux tiers du bénéfice après la
+  période d'exonération.
+
+metadata:
+  unit: années
+  reference:
+    2017-01-01:
+      title: "Loi n° 2016-71 du 30/09/2016 portant Code d'Incitations aux Investissements, Art. 65"
+  official_journal_date:
+    2017-01-01: "2016-09-30"
+  notes:
+    2017-01-01:
+    - title: "Exonération totale IS pendant 10 ans pour les investissements directs dans l'agriculture et la pêche, applicable aux projets agréés à compter du 01/01/2017 (entrée en vigueur du CII). Après exonération : déduction des 2/3 du bénéfice (Art. 11 bis § V CIRPPIS)."
+
+duree_exoneration:
+  description: Durée d'exonération totale IS pour les investissements agriculture/pêche (en années)
+  values:
+    2017-01-01:
+      value: 10

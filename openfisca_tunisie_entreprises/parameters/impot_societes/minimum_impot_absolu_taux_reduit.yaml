@@ -1,0 +1,24 @@
+description: >
+  Montant minimum absolu du TMI pour les sociétés soumises à l'IS au taux réduit
+  de 10 %. Maintenu à 300 DT (non relevé à 500 DT par la LF 2021, contrairement
+  au régime général).
+
+metadata:
+  unit: "currency-DT"
+  reference:
+    2013-01-01:
+      title: "Loi de finances n° 2012-27 du 29/12/2012, Art. 12 — Art. 49-II CIRPPIS"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 14-16 — Art. 49-II CIRPPIS"
+  official_journal_date:
+    2013-01-01: "2012-12-29"
+    2021-01-01: "2020-12-23"
+  notes:
+    2013-01-01:
+    - title: "Plancher TMI instauré à 300 DT, applicable aux entités relevant du taux IS réduit"
+    2021-01-01:
+    - title: "La LF 2021 relève le plancher général à 500 DT mais maintient 300 DT pour les sociétés au taux réduit 10 %"
+
+values:
+  2013-01-01:
+    value: 300

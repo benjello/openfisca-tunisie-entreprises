@@ -1,0 +1,46 @@
+description: >
+  Déduction supplémentaire au titre des amortissements, accordée en plus de
+  l'amortissement linéaire de droit commun, sur la valeur d'acquisition des
+  équipements concernés, au titre de la première année d'utilisation.
+
+  Deux dispositifs distincts :
+    1. Équipements industriels (extension/renouvellement) — Art. 12 bis VIII CIRPPIS
+       Taux : 30 % de la valeur d'acquisition
+       Secteurs exclus : financier, énergie (sauf ENR), mines, promotion immobilière,
+       restauration/hébergement sur place, commerce, opérateurs de télécom.
+    2. Équipements ENR (énergies renouvelables) — Art. 12 bis IX CIRPPIS
+       Taux : 30 % de la valeur d'acquisition
+       Tous secteurs éligibles (avec attestation du ministère de l'énergie).
+
+metadata:
+  unit: /1
+  reference:
+    2017-01-01:
+      title: "Loi n° 2017-8 du 14/02/2017, Art. 12 bis VIII et IX CIRPPIS"
+    2018-01-01:
+      title: "Loi de finances n° 2018-56 du 27/12/2018, Art. 20 (modification)"
+  official_journal_date:
+    2017-01-01: "2017-02-14"
+    2018-01-01: "2018-12-27"
+  notes:
+    2017-01-01:
+    - title: "Création des déductions supplémentaires à 30 % pour équipements industriels (secteurs éligibles) et équipements ENR (tous secteurs)"
+    2018-01-01:
+    - title: "Modification des conditions et secteurs éligibles par la LF 2019"
+
+taux_equipements_industriels:
+  description: >
+    Taux de la déduction supplémentaire sur les équipements industriels acquis dans
+    le cadre d'opérations d'extension ou de renouvellement (hors voitures de tourisme
+    autres que celles constituant l'objet principal de l'exploitation).
+  values:
+    2017-01-01:
+      value: 0.30
+
+taux_equipements_enr:
+  description: >
+    Taux de la déduction supplémentaire sur les équipements et matériels productifs
+    d'énergies alternatives ou renouvelables.
+  values:
+    2017-01-01:
+      value: 0.30

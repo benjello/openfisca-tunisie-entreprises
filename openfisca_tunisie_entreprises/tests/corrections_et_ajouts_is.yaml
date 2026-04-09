@@ -1,0 +1,263 @@
+# Tests YAML — Corrections TMI + ajouts IS
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_corrections_et_ajouts_is.yaml
+
+
+# ---------------------------------------------------------------------------
+# BUG 1 CORRIGÉ — TMI différencié selon le taux IS
+# ---------------------------------------------------------------------------
+
+- name: "TMI régime général (taux normal) — 0,2 % / plancher 500 DT"
+  # CA = 1 000 000 DT ; taux normal (catégorie 1) → TMI = 1 000 000 × 0,2 % = 2 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        chiffre_affaires_local: 1000000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        tmi: 2000.0
+
+
+- name: "TMI taux réduit 10 % — 0,1 % / plancher 300 DT"
+  # Même CA que ci-dessus mais catégorie réduit (2) → 0,1 % = 1 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        chiffre_affaires_local: 1000000.0
+        categorie_is: 2
+  output:
+    entreprises:
+      ent_1:
+        tmi: 1000.0
+
+
+- name: "TMI taux réduit — plancher 300 DT (CA très faible)"
+  # CA = 10 000 DT ; catégorie réduit → TMI taux = 10 DT < 300 DT → plancher 300 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        chiffre_affaires_local: 10000.0
+        categorie_is: 2
+  output:
+    entreprises:
+      ent_1:
+        tmi: 300.0
+
+
+# ---------------------------------------------------------------------------
+# Amortissement supplémentaire 30 %
+# ---------------------------------------------------------------------------
+
+- name: "Amortissement supplémentaire 30 % — équipements industriels (secteur éligible)"
+  # Équipements acquis : 200 000 DT → déduction supp. = 200 000 × 30 % = 60 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        valeur_equipements_industriels_acquis: 200000.0
+        est_secteur_eligible_amortissement_supplementaire: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_amortissement_supplementaire: 60000.0
+
+
+- name: "Amortissement supplémentaire — secteur inéligible (commerce) : déduction nulle"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        valeur_equipements_industriels_acquis: 200000.0
+        est_secteur_eligible_amortissement_supplementaire: false
+  output:
+    entreprises:
+      ent_1:
+        deduction_amortissement_supplementaire: 0.0
+
+
+- name: "Amortissement supplémentaire 30 % ENR — tous secteurs éligibles"
+  # Équipements ENR : 100 000 DT → 30 % = 30 000 DT (pas de restriction sectorielle)
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        valeur_equipements_enr_acquis: 100000.0
+        est_secteur_eligible_amortissement_supplementaire: false
+  output:
+    entreprises:
+      ent_1:
+        deduction_amortissement_supplementaire: 30000.0
+
+
+- name: "Amortissement supplémentaire — cumul industrie + ENR"
+  # Industrie : 100 000 DT × 30 % = 30 000 ; ENR : 50 000 DT × 30 % = 15 000
+  # Total = 45 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        valeur_equipements_industriels_acquis: 100000.0
+        valeur_equipements_enr_acquis: 50000.0
+        est_secteur_eligible_amortissement_supplementaire: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_amortissement_supplementaire: 45000.0
+
+
+# ---------------------------------------------------------------------------
+# Dons et mécénat
+# ---------------------------------------------------------------------------
+
+- name: "Déduction dons et mécénat — cumul dons sociaux + mécénat culturel"
+  # Dons œuvres sociales : 10 000 DT + mécénat culturel : 5 000 DT = 15 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        dons_oeuvres_sociales: 10000.0
+        mecenat_culturel: 5000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_dons_mecenat: 15000.0
+
+
+# ---------------------------------------------------------------------------
+# Intérêts emprunts obligataires verts
+# ---------------------------------------------------------------------------
+
+- name: "Déduction intérêts emprunts verts — plafond 10 000 DT respecté"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_emprunts_verts: 7000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_interets_emprunts_verts: 7000.0
+
+
+- name: "Déduction intérêts emprunts verts — plafonnée à 10 000 DT"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_emprunts_verts: 18000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_interets_emprunts_verts: 10000.0
+
+
+# ---------------------------------------------------------------------------
+# Exonération agriculture et pêche (10 ans)
+# ---------------------------------------------------------------------------
+
+- name: "Exonération IS agriculture/pêche — pendant les 10 premières années"
+  # IS brut hypothétique = 30 000 DT ; année 6 → exonéré
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+        est_investissement_agriculture_peche: true
+        annees_dans_regime_agriculture_peche: 6
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_agriculture_peche: 30000.0
+
+
+- name: "Exonération IS agriculture/pêche — nulle après 10 ans"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+        est_investissement_agriculture_peche: true
+        annees_dans_regime_agriculture_peche: 11
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_agriculture_peche: 0.0

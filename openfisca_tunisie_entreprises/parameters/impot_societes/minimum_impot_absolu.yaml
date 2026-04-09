@@ -1,0 +1,26 @@
+description: >
+  Montant minimum absolu du TMI en dinars, applicable aux sociétés soumises à l'IS
+  au taux normal ou majoré. L'IS annuel ne peut être inférieur à ce plancher même
+  en l'absence de chiffre d'affaires. Applicable à partir de la 4e année d'activité.
+
+metadata:
+  unit: "currency-DT"
+  reference:
+    2013-01-01:
+      title: "Loi de finances n° 2012-27 du 29/12/2012, Art. 12 — Art. 49-II CIRPPIS"
+    2021-01-01:
+      title: "Loi de finances n° 2020-46 du 23/12/2020, Art. 14-16 — Art. 49-II CIRPPIS"
+  official_journal_date:
+    2013-01-01: "2012-12-29"
+    2021-01-01: "2020-12-23"
+  notes:
+    2013-01-01:
+    - title: "Instauration du plancher absolu TMI à 300 DT"
+    2021-01-01:
+    - title: "Relèvement de 300 DT à 500 DT pour les sociétés au taux normal/majoré (plancher taux réduit 10 % maintenu à 300 DT)"
+
+values:
+  2013-01-01:
+    value: 300
+  2021-01-01:
+    value: 500

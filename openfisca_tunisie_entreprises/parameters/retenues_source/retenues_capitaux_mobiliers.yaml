@@ -1,0 +1,23 @@
+description: >
+  Taux de retenue à la source applicable aux revenus de capitaux mobiliers
+  (intérêts, dividendes assimilés, etc.) versés à des résidents, à l'exception
+  des intérêts sur dépôts en devises ou en dinars convertibles.
+
+metadata:
+  unit: /1
+  reference:
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 52-I-c CIRPPIS"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+  notes:
+    1990-01-01:
+    - title: "Taux RS revenus de capitaux mobiliers (intérêts) : 20 %, libératoire pour les personnes physiques. Inchangé depuis l'origine du CIRPPIS."
+
+taux:
+  description: >
+    Taux RS sur revenus de capitaux mobiliers (intérêts servis à des PP et PM
+    résidentes, hors dépôts en devises). Taux libératoire pour les PP.
+  values:
+    1990-01-01:
+      value: 0.20

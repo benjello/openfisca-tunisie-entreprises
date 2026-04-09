@@ -1,0 +1,20 @@
+description: >
+  Déduction des intérêts provenant d'emprunts obligataires verts,
+  socialement responsables et durables, dans la limite d'un plafond annuel.
+
+metadata:
+  unit: "currency-DT"
+  reference:
+    2022-01-01:
+      title: "Décret-loi n° 2021-21 du 28/12/2021 (LF 2022), Art. 29 — Art. 11 bis II bis CIRPPIS"
+  official_journal_date:
+    2022-01-01: "2021-12-28"
+  notes:
+    2022-01-01:
+    - title: "Création de la déduction des intérêts d'emprunts obligataires verts, socialement responsables et durables, dans la limite de 10 000 DT par an"
+
+plafond:
+  description: Plafond annuel de déduction des intérêts d'emprunts obligataires verts (en DT)
+  values:
+    2022-01-01:
+      value: 10000

@@ -1,0 +1,629 @@
+# Tests du compte de résultat — agrégats NCT 03
+#
+# Couvre : marge_brute, cout_des_ventes, revenus_exploitation, charges_exploitation,
+#          produits_financiers, charges_financieres, resultat_exploitation,
+#          resultat_financier, resultat_ordinaire_avant_impot,
+#          produits_extraordinaires, charges_extraordinaires,
+#          resultat_extraordinaire, resultat_avant_impot, resultat_net,
+#          taux_marge_brute, taux_exportation, masse_salariale_brute
+#
+# Note : tous les tests utilisent est_exonere_tcl: true pour l'établissement,
+#        ce qui évite que le minimum TCL (100 DT) ne perturbe les résultats
+#        des tests qui ne portent pas sur la TCL.
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_compte_resultat.yaml
+
+
+# ---------------------------------------------------------------------------
+# Coût des ventes
+# ---------------------------------------------------------------------------
+
+- name: "Coût des ventes — marchandises uniquement"
+  # cout_des_ventes = achats_marchandises + var_stock_m + achats_mp + var_stock_mp
+  # 300 000 + 0 + 0 + 0 = 300 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        achats_marchandises_consommes: 300000.0
+  output:
+    entreprises:
+      ent_1:
+        cout_des_ventes: 300000.0
+
+
+- name: "Coût des ventes — achats, stocks et matières premières"
+  # Achats marchandises              : 200 000
+  # Variation stocks marchandises    : +20 000 (augmentation → charge supplémentaire)
+  # Achats matières premières        :  80 000
+  # Variation stocks matières        : −10 000 (diminution → crédit)
+  # Total = 200 000 + 20 000 + 80 000 − 10 000 = 290 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        achats_marchandises_consommes: 200000.0
+        variation_stocks_marchandises: 20000.0
+        achats_matieres_premieres_consommes: 80000.0
+        variation_stocks_matieres: -10000.0
+  output:
+    entreprises:
+      ent_1:
+        cout_des_ventes: 290000.0
+
+
+# ---------------------------------------------------------------------------
+# Marge brute
+# ---------------------------------------------------------------------------
+
+- name: "Marge brute — activité commerciale simple"
+  # CA local (ventes marchandises) : 500 000 DT
+  # Coût des ventes (achats)       : 300 000 DT
+  # Marge brute = 500 000 − 300 000 = 200 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 500000.0
+        achats_marchandises_consommes: 300000.0
+  output:
+    entreprises:
+      ent_1:
+        marge_brute: 200000.0
+
+
+- name: "Taux de marge brute — 40 %"
+  # CA = 500 000, coût = 300 000 → marge = 200 000 → taux = 40 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 500000.0
+        achats_marchandises_consommes: 300000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_marge_brute: 0.4
+
+
+# ---------------------------------------------------------------------------
+# Chiffre d'affaires — agrégats
+# ---------------------------------------------------------------------------
+
+- name: "CA local = ventes marchandises + production biens + services"
+  # Ventes marchandises local  : 200 000
+  # Production biens local     : 150 000
+  # Prestations services local :  50 000
+  # Total CA local             : 400 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 200000.0
+        production_vendue_biens_local: 150000.0
+        production_vendue_services_local: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        chiffre_affaires_local: 400000.0
+
+
+- name: "CA export = ventes export + production export + services export"
+  # Ventes marchandises export  : 100 000
+  # Production biens export     :  80 000
+  # Prestations services export :  20 000
+  # Total CA export             : 200 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_export: 100000.0
+        production_vendue_biens_export: 80000.0
+        production_vendue_services_export: 20000.0
+  output:
+    entreprises:
+      ent_1:
+        chiffre_affaires_export: 200000.0
+
+
+- name: "Taux d'exportation — 33 %"
+  # CA local = 400 000 ; CA export = 200 000 → CA total = 600 000
+  # Taux export = 200 000 / 600 000 ≈ 33,3 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 400000.0
+        ventes_marchandises_export: 200000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_exportation: 0.3333
+
+
+# ---------------------------------------------------------------------------
+# Revenus d'exploitation (I)
+# ---------------------------------------------------------------------------
+
+- name: "Revenus exploitation = CA + variation stocks + subventions + reprises"
+  # CA (services local)       : 1 000 000
+  # Subventions exploitation  :    50 000
+  # Autres produits           :    20 000
+  # Reprises provisions       :    10 000
+  # Total                     : 1 080 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 1000000.0
+        subventions_exploitation: 50000.0
+        autres_produits_exploitation: 20000.0
+        reprises_provisions_exploitation: 10000.0
+  output:
+    entreprises:
+      ent_1:
+        revenus_exploitation: 1080000.0
+
+
+# ---------------------------------------------------------------------------
+# Charges d'exploitation (II)
+# ---------------------------------------------------------------------------
+
+- name: "Charges exploitation — services, amortissements, autres charges"
+  # Services extérieurs      : 150 000
+  # Dotations amortissements :  50 000
+  # Autres charges           :  30 000
+  # TCL = 0 (établissement exonéré) ; TFP = FOPROLOS = 0 (masse salariale nulle)
+  # → charges_exploitation = 230 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        services_exterieurs: 150000.0
+        dotations_amortissements: 50000.0
+        autres_charges_exploitation: 30000.0
+  output:
+    entreprises:
+      ent_1:
+        charges_exploitation: 230000.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat d'exploitation
+# ---------------------------------------------------------------------------
+
+- name: "Résultat exploitation = revenus − charges"
+  # CA local (services) : 800 000
+  # Services extérieurs : 200 000
+  # Dotations amortissements :  50 000
+  # → revenus_exploitation = 800 000 ; charges_exploitation = 250 000
+  # → résultat_exploitation = 550 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 800000.0
+        services_exterieurs: 200000.0
+        dotations_amortissements: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_exploitation: 550000.0
+
+
+# ---------------------------------------------------------------------------
+# Produits financiers (III)
+# ---------------------------------------------------------------------------
+
+- name: "Produits financiers = intérêts + gains de change + valeurs mobilières + autres"
+  # Intérêts et revenus assimilés :  30 000
+  # Gains de change               :  10 000
+  # Revenus valeurs mobilières    :  20 000
+  # Autres produits financiers    :   5 000
+  # Total                         :  65 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_et_revenus_assimiles: 30000.0
+        gains_de_change: 10000.0
+        revenus_valeurs_mobilieres: 20000.0
+        autres_produits_financiers: 5000.0
+  output:
+    entreprises:
+      ent_1:
+        produits_financiers: 65000.0
+
+
+# ---------------------------------------------------------------------------
+# Charges financières (IV)
+# ---------------------------------------------------------------------------
+
+- name: "Charges financières = intérêts + pertes de change + autres"
+  # Intérêts sur emprunts : 40 000
+  # Pertes de change      :  8 000
+  # Autres charges fin.   :  2 000
+  # Total                 : 50 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_et_charges_assimiles: 40000.0
+        pertes_de_change: 8000.0
+        autres_charges_financieres: 2000.0
+  output:
+    entreprises:
+      ent_1:
+        charges_financieres: 50000.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat financier
+# ---------------------------------------------------------------------------
+
+- name: "Résultat financier positif (produits > charges)"
+  # Produits financiers : 65 000 ; Charges financières : 50 000
+  # Résultat financier  : 15 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_et_revenus_assimiles: 65000.0
+        interets_et_charges_assimiles: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_financier: 15000.0
+
+
+- name: "Résultat financier négatif — entreprise endettée"
+  # Produits financiers :  5 000 ; Charges financières : 80 000
+  # Résultat financier  : −75 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        autres_produits_financiers: 5000.0
+        interets_et_charges_assimiles: 80000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_financier: -75000.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat ordinaire avant impôt
+# ---------------------------------------------------------------------------
+
+- name: "Résultat ordinaire = résultat exploitation + résultat financier"
+  # CA services local     : 1 000 000
+  # Amortissements        :   100 000  → résultat_exploitation = 900 000
+  # Intérêts reçus        :    20 000
+  # Intérêts payés        :    50 000  → résultat_financier = −30 000
+  # Résultat ordinaire    =   870 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 1000000.0
+        dotations_amortissements: 100000.0
+        interets_et_revenus_assimiles: 20000.0
+        interets_et_charges_assimiles: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_ordinaire_avant_impot: 870000.0
+
+
+# ---------------------------------------------------------------------------
+# Produits extraordinaires (V)
+# ---------------------------------------------------------------------------
+
+- name: "Produits extraordinaires = plus-values + subventions + autres + reprises"
+  # Plus-values cessions         :  50 000
+  # Subventions d'équilibre      :  30 000
+  # Autres produits extraordin.  :  10 000
+  # Reprises provisions extraord.:  15 000
+  # Total                        : 105 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        plus_values_cessions_actifs: 50000.0
+        subventions_equilibre: 30000.0
+        autres_produits_extraordinaires: 10000.0
+        reprises_provisions_extraordinaires: 15000.0
+  output:
+    entreprises:
+      ent_1:
+        produits_extraordinaires: 105000.0
+
+
+# ---------------------------------------------------------------------------
+# Charges extraordinaires (VI)
+# ---------------------------------------------------------------------------
+
+- name: "Charges extraordinaires = moins-values + autres + provisions"
+  # Moins-values cessions          :  20 000
+  # Autres charges extraordinaires :   5 000
+  # Dotations provisions extraord. :   8 000
+  # Total                          :  33 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        moins_values_cessions_actifs: 20000.0
+        autres_charges_extraordinaires: 5000.0
+        dotations_provisions_extraordinaires: 8000.0
+  output:
+    entreprises:
+      ent_1:
+        charges_extraordinaires: 33000.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat extraordinaire
+# ---------------------------------------------------------------------------
+
+- name: "Résultat extraordinaire positif — plus-value de cession"
+  # Plus-value cession d'un actif : 50 000 DT (aucune charge extraordinaire)
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        plus_values_cessions_actifs: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_extraordinaire: 50000.0
+
+
+- name: "Résultat extraordinaire négatif — moins-value nette"
+  # Plus-values : 10 000 ; Moins-values : 35 000
+  # Résultat extraordinaire = −25 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        plus_values_cessions_actifs: 10000.0
+        moins_values_cessions_actifs: 35000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_extraordinaire: -25000.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat avant impôt (résultat comptable)
+# ---------------------------------------------------------------------------
+
+- name: "Résultat avant impôt — cas bénéficiaire complet"
+  # CA services local         : 1 000 000
+  # Amortissements            :   100 000  → résultat_exploitation   =  900 000
+  # Intérêts payés            :    30 000  → résultat_financier      =  −30 000
+  # Plus-values actifs        :    20 000  → résultat_extraordinaire =   20 000
+  # Résultat avant impôt      =   890 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 1000000.0
+        dotations_amortissements: 100000.0
+        interets_et_charges_assimiles: 30000.0
+        plus_values_cessions_actifs: 20000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_avant_impot: 890000.0
+
+
+- name: "Résultat avant impôt nul — charges = produits"
+  # CA = amortissements = 500 000 DT → résultat nul
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 500000.0
+        dotations_amortissements: 500000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_avant_impot: 0.0
+
+
+# ---------------------------------------------------------------------------
+# Résultat net
+# ---------------------------------------------------------------------------
+
+- name: "Résultat net = résultat avant impôt − IS imputé"
+  # CA services : 200 000 ; IS imputé : 30 000
+  # Résultat net = 200 000 − 30 000 = 170 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 200000.0
+        impot_exercice: 30000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_net: 170000.0
+
+
+- name: "Résultat net déficitaire — charges supérieures aux produits"
+  # CA services : 100 000 ; Amortissements : 150 000
+  # Résultat net = −50 000 DT (IS imputé = 0 en cas de déficit)
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        production_vendue_services_local: 100000.0
+        dotations_amortissements: 150000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_net: -50000.0
+
+
+# ---------------------------------------------------------------------------
+# Masse salariale brute
+# ---------------------------------------------------------------------------
+
+- name: "Masse salariale brute = salaires + avantages en nature"
+  # Salaires bruts   : 400 000
+  # Avantages nature :  25 000
+  # Masse salariale  : 425 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 400000.0
+        avantages_en_nature: 25000.0
+  output:
+    entreprises:
+      ent_1:
+        masse_salariale_brute: 425000.0

@@ -1,0 +1,349 @@
+# Tests YAML — Nouvelles retenues à la source et avance importation
+#
+# Couvre les variables ajoutées dans la deuxième phase d'implémentation :
+#   - rs_honoraires_verses_pp (PP, 15 % avant 2021 / 10 % dès 2021)
+#   - rs_interets_verses (20 %, libératoire PP)
+#   - avance_importation (Art. 51 ter, 10 % / 15 % si non-conforme dès 2024)
+#   - total_rs_collectees (intégration toutes sources)
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_retenues_source.yaml
+
+
+# ---------------------------------------------------------------------------
+# RS honoraires versés à des personnes physiques
+# ---------------------------------------------------------------------------
+
+- name: "RS honoraires PP — taux 10 % depuis 2021"
+  # Honoraires versés à un expert-comptable PP (régime réel) : 50 000 DT
+  # RS = 50 000 × 10 % = 5 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        honoraires_verses_pp: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_honoraires_verses_pp: 5000.0
+
+
+- name: "RS honoraires PP — taux 15 % avant 2021"
+  # Honoraires versés à une PP en 2020 : 40 000 DT
+  # RS = 40 000 × 15 % = 6 000 DT
+  period: "2020"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        honoraires_verses_pp: 40000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_honoraires_verses_pp: 6000.0
+
+
+# ---------------------------------------------------------------------------
+# RS revenus de capitaux mobiliers (intérêts)
+# ---------------------------------------------------------------------------
+
+- name: "RS intérêts versés à des résidents — taux 20 %"
+  # Intérêts versés à des obligataires résidents : 100 000 DT
+  # RS = 100 000 × 20 % = 20 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        interets_verses_residents: 100000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_interets_verses: 20000.0
+
+
+# ---------------------------------------------------------------------------
+# Avance à l'importation (Art. 51 ter)
+# ---------------------------------------------------------------------------
+
+- name: "Avance importation — taux 10 % (entreprise conforme, 2023)"
+  # Importations de produits de consommation : 500 000 DT (valeur en douane + taxes)
+  # Avance = 500 000 × 10 % = 50 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        importations_soumises_avance: 500000.0
+        est_conforme_declaration_electronique: true
+  output:
+    entreprises:
+      ent_1:
+        avance_importation: 50000.0
+
+
+- name: "Avance importation — taux 15 % (entreprise non-conforme, 2024)"
+  # Importations : 300 000 DT ; entreprise non-conforme depuis 2024 → taux 15 %
+  # Avance = 300 000 × 15 % = 45 000 DT
+  period: "2024"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        importations_soumises_avance: 300000.0
+        est_conforme_declaration_electronique: false
+  output:
+    entreprises:
+      ent_1:
+        avance_importation: 45000.0
+
+
+- name: "Avance importation — taux 15 % temporaire 2018-2019"
+  # Pendant 2018-2019 le taux était relevé à 15 % même pour les conformes
+  # Importations : 200 000 DT → Avance = 200 000 × 15 % = 30 000 DT
+  period: "2018"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        importations_soumises_avance: 200000.0
+        est_conforme_declaration_electronique: true
+  output:
+    entreprises:
+      ent_1:
+        avance_importation: 30000.0
+
+
+# ---------------------------------------------------------------------------
+# Total RS collectées (intégration)
+# ---------------------------------------------------------------------------
+
+- name: "Total RS collectées — cumul de toutes les sources"
+  # Honoraires PM    : 100 000 DT × 3 %  =  3 000 DT
+  # Honoraires PP    :  50 000 DT × 10 % =  5 000 DT
+  # Loyers PM        :  80 000 DT × 15 % = 12 000 DT
+  # Dividendes       : 200 000 DT × 10 % = 20 000 DT
+  # Intérêts         :  50 000 DT × 20 % = 10 000 DT
+  # Avance import.   : 300 000 DT × 10 % = 30 000 DT
+  # Total                                = 80 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        honoraires_verses_pm: 100000.0
+        honoraires_verses_pp: 50000.0
+        loyers_verses_pm: 80000.0
+        dividendes_distribues: 200000.0
+        interets_verses_residents: 50000.0
+        importations_soumises_avance: 300000.0
+        est_conforme_declaration_electronique: true
+  output:
+    entreprises:
+      ent_1:
+        total_rs_collectees: 80000.0
+
+
+# ---------------------------------------------------------------------------
+# Tests traduits depuis test_retenues_source.py — RS de base et solde IS
+# ---------------------------------------------------------------------------
+
+- name: "RS honoraires PM — 3 %"
+  # Honoraires versés à une PM : 100 000 DT → RS = 3 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        honoraires_verses_pm: 100000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_honoraires_verses: 3000.0
+
+
+- name: "RS loyers PM — 15 %"
+  # Loyers versés à une PM : 50 000 DT → RS = 7 500 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        loyers_verses_pm: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_loyers_verses_pm: 7500.0
+
+
+- name: "RS loyers PP — 15 %"
+  # Loyers versés à une PP : 30 000 DT → RS = 4 500 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        loyers_verses_pp: 30000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_loyers_verses_pp: 4500.0
+
+
+- name: "RS dividendes — 10 % (taux applicable dès 2021)"
+  # Dividendes distribués : 200 000 DT → RS = 20 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        dividendes_distribues: 200000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_dividendes: 20000.0
+
+
+- name: "RS marchés de l'État — 1 % pour les PM à l'IS au taux normal (Art. 52-I-g)"
+  # Marchés : 500 000 DT → RS = 5 000 DT (taux 1 % depuis Art. 14-6 LF 2020-46)
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        marches_etat_verses: 500000.0
+  output:
+    entreprises:
+      ent_1:
+        rs_marches_etat: 5000.0
+
+
+- name: "Total RS subies = somme de toutes les RS reçues en tant que bénéficiaire"
+  # RS subies honoraires : 5 000 + loyers : 10 000 + marchés : 3 000 = 18 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        rs_subies_honoraires: 5000.0
+        rs_subies_loyers: 10000.0
+        rs_subies_marches: 3000.0
+  output:
+    entreprises:
+      ent_1:
+        total_rs_subies: 18000.0
+
+
+- name: "Solde IS final positif — IS net − RS subies − acomptes"
+  # IS net ≈ 40 000 DT ; RS subies : 5 000 DT ; acomptes (IS N-1 = 30 000 → 27 000)
+  # Solde = 40 000 − 5 000 − 27 000 = 8 000 DT
+  period: "2023"
+  absolute_error_margin: 100.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 266667.0
+        categorie_is: 1
+        annees_activite: 10
+        est_exonere_is: false
+        is_exercice_precedent: 30000.0
+        rs_subies_honoraires: 5000.0
+  output:
+    entreprises:
+      ent_1:
+        solde_is_final: 8000.0
+
+
+- name: "Solde IS final négatif — crédit IS restituable (acomptes + RS subies > IS net)"
+  # IS net = 7 500 DT ; acomptes (IS N-1 = 40 000 → 36 000) + RS subies 5 000 = 41 000
+  # Solde = 7 500 − 36 000 − 5 000 = −33 500 DT
+  period: "2023"
+  absolute_error_margin: 100.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 50000.0
+        categorie_is: 1
+        annees_activite: 10
+        est_exonere_is: false
+        is_exercice_precedent: 40000.0
+        rs_subies_honoraires: 5000.0
+  output:
+    entreprises:
+      ent_1:
+        solde_is_final: -33500.0

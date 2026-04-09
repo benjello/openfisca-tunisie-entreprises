@@ -1,0 +1,271 @@
+# Tests YAML — TCL : tcl_comptabilisee et taux_effectif_tcl
+#
+# Complète les tests Python test_tcl.py (brute, minimum, exonération, agrégation)
+# en ajoutant les variables comptabilisées et le taux effectif.
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_tcl.yaml
+
+
+# ---------------------------------------------------------------------------
+# TCL comptabilisée (= TCL totale de l'entreprise)
+# ---------------------------------------------------------------------------
+
+- name: "TCL comptabilisée = TCL totale de l'entreprise (siège unique)"
+  # CA local établissement : 1 000 000 DT → TCL = 2 000 DT
+  # tcl_comptabilisee = tcl = 2 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 1000000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    entreprises:
+      ent_1:
+        tcl_comptabilisee: 2000.0
+
+
+- name: "TCL comptabilisée zéro — établissement exonéré"
+  # Établissement exonéré → TCL due = 0 → TCL comptabilisée = 0
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 2000000.0
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    entreprises:
+      ent_1:
+        tcl_comptabilisee: 0.0
+
+
+# ---------------------------------------------------------------------------
+# Taux effectif TCL (TCL totale / CA local entreprise)
+# ---------------------------------------------------------------------------
+
+- name: "Taux effectif TCL = 0,2 % (taux plein, CA suffit à dépasser le minimum)"
+  # CA local entreprise (via ventes_marchandises_local) : 1 000 000 DT
+  # CA local établissement : 1 000 000 DT → TCL établissement = 2 000 DT
+  # taux_effectif_tcl = 2 000 / 1 000 000 = 0,2 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 1000000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 1000000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_tcl: 0.002
+
+
+- name: "Taux effectif TCL > 0,2 % — minimum légal dominant (petit CA)"
+  # CA local établissement : 10 000 DT → TCL brute = 20 DT < 100 DT → TCL = 100 DT
+  # CA local entreprise (même valeur)
+  # taux_effectif_tcl = 100 / 10 000 = 1 %  (> 0,2 % du fait du minimum)
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 10000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        ventes_marchandises_local: 10000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_tcl: 0.01
+
+
+- name: "Taux effectif TCL — deux établissements, dont un exonéré"
+  # Étab siège : CA 500 000 DT → TCL 1 000 DT
+  # Étab secondaire : CA 200 000 DT, exonéré → TCL 0 DT
+  # TCL totale = 1 000 DT
+  # CA local entreprise = 700 000 DT (via ventes_marchandises_local)
+  # taux_effectif_tcl = 1 000 / 700 000 ≈ 0,143 %
+  period: "2023"
+  relative_error_margin: 0.01
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 500000.0
+      etab_2:
+        chiffre_affaires_local_etablissement: 200000.0
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        etablissements_secondaires:
+          - etab_2
+        ventes_marchandises_local: 700000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_tcl: 0.001429
+
+
+# ---------------------------------------------------------------------------
+# Tests traduits depuis test_tcl.py — variables de base TCL
+# ---------------------------------------------------------------------------
+
+- name: "TCL brute établissement = CA × 0,2 % (avant application du minimum)"
+  # CA local établissement : 1 000 000 DT → TCL brute = 2 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 1000000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    etablissements:
+      etab_1:
+        tcl_etablissement_avant_minimum: 2000.0
+
+
+- name: "TCL établissement — minimum légal 100 DT appliqué (CA trop faible)"
+  # CA : 10 000 DT → TCL brute = 20 DT < 100 DT → TCL due = 100 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 10000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    etablissements:
+      etab_1:
+        tcl_etablissement: 100.0
+
+
+- name: "TCL établissement — minimum non appliqué (TCL brute > 100 DT)"
+  # CA : 1 000 000 DT → TCL brute = 2 000 DT > 100 DT → TCL due = 2 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 1000000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    etablissements:
+      etab_1:
+        tcl_etablissement: 2000.0
+
+
+- name: "TCL établissement exonéré — due = 0 même si CA > 0"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 500000.0
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+  output:
+    etablissements:
+      etab_1:
+        tcl_etablissement: 0.0
+
+
+- name: "TCL entreprise — agrégation de deux établissements"
+  # Étab 1 : CA 500 000 DT → TCL 1 000 DT
+  # Étab 2 : CA 200 000 DT → TCL   400 DT
+  # Total   :                     1 400 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 500000.0
+      etab_2:
+        chiffre_affaires_local_etablissement: 200000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        etablissements_secondaires:
+          - etab_2
+  output:
+    entreprises:
+      ent_1:
+        tcl: 1400.0
+
+
+- name: "TCL entreprise — établissement exonéré ne contribue pas au total"
+  # Étab 1 : CA 500 000 DT, exonéré → TCL 0 DT
+  # Étab 2 : CA 200 000 DT          → TCL 400 DT
+  # Total   :                            400 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 500000.0
+        est_exonere_tcl: true
+      etab_2:
+        chiffre_affaires_local_etablissement: 200000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        etablissements_secondaires:
+          - etab_2
+  output:
+    entreprises:
+      ent_1:
+        tcl: 400.0
+
+
+- name: "TCL entreprise — minimum 100 DT appliqué par établissement (pas globalement)"
+  # Étab 1 : CA 1 000 DT → TCL brute 2 DT → minimum 100 DT
+  # Étab 2 : CA 5 000 DT → TCL brute 10 DT → minimum 100 DT
+  # Total   :                                  200 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 1000.0
+      etab_2:
+        chiffre_affaires_local_etablissement: 5000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        etablissements_secondaires:
+          - etab_2
+  output:
+    entreprises:
+      ent_1:
+        tcl: 200.0

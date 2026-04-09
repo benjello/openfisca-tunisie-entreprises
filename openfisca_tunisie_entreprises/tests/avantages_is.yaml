@@ -1,0 +1,595 @@
+# Tests YAML — Avantages IS : nouvelles entreprises, réinvestissement physique,
+#              déduction export temporalisée, report déficitaire 5 ans
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_avantages_is.yaml
+
+
+# ---------------------------------------------------------------------------
+# Déduction export temporalisée — coupure au 1er janvier 2021
+# ---------------------------------------------------------------------------
+
+- name: "Déduction export ⅔ applicable en 2020 (avant suppression)"
+  # Résultat comptable : 300 000 DT ; taux export : 50 %
+  # Bénéfice export = 300 000 × 50 % = 150 000 DT
+  # Déduction = 150 000 × 2/3 ≈ 100 000 DT
+  period: "2020"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 300000.0
+        ventes_marchandises_local: 150000.0
+        ventes_marchandises_export: 150000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_revenus_export: 100000.0
+
+
+- name: "Déduction export supprimée dès 2021"
+  # Mêmes données qu'en 2020 mais période 2021 → déduction = 0
+  period: "2021"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 300000.0
+        ventes_marchandises_local: 150000.0
+        ventes_marchandises_export: 150000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_revenus_export: 0.0
+
+
+# ---------------------------------------------------------------------------
+# Report déficitaire 5 ans — structure par millésime
+# ---------------------------------------------------------------------------
+
+- name: "Report déficitaire — 3 exercices déficitaires dans la fenêtre de 5 ans"
+  # Déficits : N-1 = 40 000 DT, N-3 = 20 000 DT, N-5 = 10 000 DT
+  # Total imputé = 70 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        deficit_ordinaire_annee_n1: 40000.0
+        deficit_ordinaire_annee_n2: 0.0
+        deficit_ordinaire_annee_n3: 20000.0
+        deficit_ordinaire_annee_n4: 0.0
+        deficit_ordinaire_annee_n5: 10000.0
+  output:
+    entreprises:
+      ent_1:
+        deficits_anterieurs_ordinaires_reportes: 70000.0
+
+
+- name: "Report déficitaire — imputation limite : résultat fiscal plafonné à zéro"
+  # Résultat comptable = 50 000 DT ; déficits ordinaires N-1 = 80 000 DT
+  # Résultat fiscal brut = 50 000 DT ; après imputation 80 000 → plafonné à 0
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 50000.0
+        deficit_ordinaire_annee_n1: 80000.0
+  output:
+    entreprises:
+      ent_1:
+        resultat_fiscal: 0.0
+
+
+# ---------------------------------------------------------------------------
+# Réinvestissement physique — biens d'équipement (dégrèvement Art. 7 § I CII)
+# ---------------------------------------------------------------------------
+
+- name: "Déduction réinvestissement physique — 35 % du montant investi"
+  # Résultat fiscal : 500 000 DT ; investissement équipements : 200 000 DT
+  # Plafond 35 % = 35 % × 500 000 = 175 000 DT
+  # Déduction = min(0.35 × 200 000, 175 000) = min(70 000, 175 000) = 70 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 500000.0
+        categorie_is: 1
+        investissement_biens_equipement: 200000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_reinvestissement_base: 70000.0
+
+
+- name: "Déduction réinvestissement physique plafonnée au bénéfice (35 %)"
+  # Résultat fiscal : 100 000 DT ; investissement équipements : 600 000 DT
+  # 35 % × 600 000 = 210 000 DT > 100 000 → plafonné au bénéfice = 100 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 100000.0
+        categorie_is: 1
+        investissement_biens_equipement: 600000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_reinvestissement_base: 100000.0
+
+
+- name: "Réinvestissement physique + financier cumulés"
+  # Équipements : 100 000 DT ; souscriptions capital : 50 000 DT
+  # Base = 150 000 DT ; 35 % × 150 000 = 52 500 DT
+  # Bénéfice = 400 000 DT → non plafonné → déduction = 52 500 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 400000.0
+        categorie_is: 1
+        investissement_biens_equipement: 100000.0
+        souscriptions_capital_societes: 50000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_reinvestissement_base: 52500.0
+
+
+# ---------------------------------------------------------------------------
+# Déduction nouvelles entreprises — régime dégressive 100/75/50/25 %
+# ---------------------------------------------------------------------------
+
+- name: "Nouvelle entreprise — déduction 100 % en année 1"
+  # Résultat comptable : 200 000 DT ; année 1 d'activité ; secteur éligible
+  # Déduction = 200 000 × 100 % = 200 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 1
+        est_secteur_eligible_exoneration_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 200000.0
+
+
+- name: "Nouvelle entreprise — déduction 75 % en année 2"
+  # Résultat comptable : 200 000 DT ; année 2 ; secteur éligible
+  # Déduction = 200 000 × 75 % = 150 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 2
+        est_secteur_eligible_exoneration_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 150000.0
+
+
+- name: "Nouvelle entreprise — déduction 50 % en année 3"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 3
+        est_secteur_eligible_exoneration_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 100000.0
+
+
+- name: "Nouvelle entreprise — déduction 25 % en année 4"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 4
+        est_secteur_eligible_exoneration_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 50000.0
+
+
+- name: "Nouvelle entreprise — déduction nulle dès l'année 5"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 5
+        est_secteur_eligible_exoneration_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 0.0
+
+
+- name: "Nouvelle entreprise — secteur non éligible (commerce) : déduction nulle"
+  # Même données, mais secteur exclé → pas de déduction
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 200000.0
+        annees_depuis_creation: 1
+        est_secteur_eligible_exoneration_creation: false
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 0.0
+
+
+- name: "Nouvelle entreprise — exonération totale 4 ans (régime LF 2024, année 3)"
+  # Entreprise créée en 2024 → exonération totale 4 ans = 100 % chaque année
+  # Résultat : 300 000 DT ; année 3 ; régime spécial → 100 % (non 50 %)
+  period: "2026"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        resultat_avant_impot: 300000.0
+        annees_depuis_creation: 3
+        est_secteur_eligible_exoneration_creation: true
+        beneficie_exoneration_totale_creation: true
+  output:
+    entreprises:
+      ent_1:
+        deduction_benefices_nouvelles_entreprises: 300000.0
+
+
+# ---------------------------------------------------------------------------
+# Tests traduits depuis test_avantages_fiscaux.py
+# ---------------------------------------------------------------------------
+
+# Entreprises totalement exportatrices (ETE) — exonération IS
+
+- name: "ETE — exonération IS totale pendant les 10 premières années (année 5)"
+  # IS brut : 300 000 × 15 % = 45 000 DT ; année 5 → exonéré à 100 %
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        est_totalement_exportatrice: true
+        annees_dans_regime_ete: 5
+        resultat_avant_impot: 300000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_ete: 45000.0
+
+
+- name: "ETE — régime encore actif à l'année 10 (incluse)"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        est_totalement_exportatrice: true
+        annees_dans_regime_ete: 10
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        est_regime_ete_actif: true
+
+
+- name: "ETE — exonération nulle à partir de l'année 11"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        est_totalement_exportatrice: true
+        annees_dans_regime_ete: 11
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_ete: 0.0
+
+
+- name: "Entreprise non ETE — pas d'exonération ETE quelle que soit la durée"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        est_totalement_exportatrice: false
+        annees_dans_regime_ete: 3
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_ete: 0.0
+
+
+# Zones de développement régional
+
+- name: "Zone 1 — exonération IS 5 ans (en année 3 : exonération = IS brut)"
+  # IS brut : 100 000 × 15 % = 15 000 DT ; année 3 ≤ 5 → exonéré
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        zone_developpement_regional: 1
+        annees_dans_zone: 3
+        resultat_avant_impot: 100000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_zone_developpement: 15000.0
+
+
+- name: "Zone 1 — exonération terminée à l'année 6 (après 5 ans)"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        zone_developpement_regional: 1
+        annees_dans_zone: 6
+        resultat_avant_impot: 100000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_zone_developpement: 0.0
+
+
+- name: "Zone 2 — exonération IS 10 ans (en année 8 : exonération = IS brut)"
+  # IS brut : 200 000 × 15 % = 30 000 DT ; année 8 ≤ 10 → exonéré
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        zone_developpement_regional: 2
+        annees_dans_zone: 8
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        exoneration_is_zone_developpement: 30000.0
+
+
+- name: "Zone 1 — déduction supplémentaire 25 % du bénéfice après la période d'exonération"
+  # Année 6+ : déduction supp = 25 % × 200 000 = 50 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        zone_developpement_regional: 1
+        annees_dans_zone: 6
+        resultat_avant_impot: 200000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_supplementaire_zone: 50000.0
+
+
+- name: "Zone 2 — déduction supplémentaire 50 % du bénéfice après la période d'exonération"
+  # Année 11+ : déduction supp = 50 % × 200 000 = 100 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        zone_developpement_regional: 2
+        annees_dans_zone: 11
+        resultat_avant_impot: 200000.0
+  output:
+    entreprises:
+      ent_1:
+        deduction_supplementaire_zone: 100000.0
+
+
+# Déduction pour réinvestissement financier (souscriptions au capital)
+
+- name: "Déduction réinvestissement financier — 35 % des souscriptions, bénéfice suffisant"
+  # Souscriptions : 100 000 DT → 35 % = 35 000 DT ; bénéfice 200 000 → non plafonné
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        souscriptions_capital_societes: 100000.0
+        resultat_avant_impot: 200000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        deduction_reinvestissement_base: 35000.0
+
+
+- name: "Déduction réinvestissement financier — plafonnée au bénéfice fiscal"
+  # Souscriptions : 1 000 000 DT → 35 % = 350 000 DT > bénéfice 50 000 → plafonné = 50 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        souscriptions_capital_societes: 1000000.0
+        resultat_avant_impot: 50000.0
+        categorie_is: 1
+  output:
+    entreprises:
+      ent_1:
+        deduction_reinvestissement_base: 50000.0
+
+
+# IS net après avantages
+
+- name: "IS net après avantages = 0 pour une ETE en période d'exonération"
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        est_totalement_exportatrice: true
+        annees_dans_regime_ete: 3
+        resultat_avant_impot: 500000.0
+        categorie_is: 1
+        annees_activite: 10
+        est_exonere_is: true
+  output:
+    entreprises:
+      ent_1:
+        is_net_apres_avantages: 0.0

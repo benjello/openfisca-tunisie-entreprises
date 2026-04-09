@@ -1,0 +1,83 @@
+description: >
+  Déduction dégressive accordée aux nouvelles entreprises sur leurs bénéfices
+  d'exploitation pendant les 4 premières années d'activité effective.
+
+  Régime de droit commun (loi n° 2017-8 du 14/02/2017, Art. 11 CIRPPIS) :
+    Année 1 : 100 %
+    Année 2 :  75 %
+    Année 3 :  50 %
+    Année 4 :  25 %
+    Année 5+ :  0 % (pas de déduction)
+
+  Secteurs exclus : financier, énergie (sauf énergies renouvelables), mines,
+  promotion immobilière, restauration/hébergement sur place, commerce,
+  opérateurs de télécommunication.
+
+metadata:
+  unit: /1
+  reference:
+    2017-01-01:
+      title: "Loi n° 2017-8 du 14/02/2017 portant refonte des avantages fiscaux, Art. 11 CIRPPIS"
+    2018-01-01:
+      title: "Loi de finances n° 2018-56 du 27/12/2018, Art. 13 (exonération totale 4 ans — créations 2018-2019)"
+    2024-01-01:
+      title: "Loi de finances n° 2024-48 du 09/12/2024, Art. 33 (exonération totale 4 ans — créations 2024-2025)"
+  official_journal_date:
+    2017-01-01: "2017-02-14"
+    2018-01-01: "2018-12-27"
+    2024-01-01: "2024-12-09"
+  notes:
+    2017-01-01:
+    - title: "Refonte des avantages fiscaux : le régime de déduction dégressive 100/75/50/25 % remplace l'ancien système d'exonération. Applicable aux entreprises créées à compter du 01/01/2017."
+    2018-01-01:
+    - title: "Régime spécial : exonération totale (100 %) pendant 4 ans pour les entreprises créées en 2018 et 2019, puis régime dégressive normal."
+    2024-01-01:
+    - title: "Renouvellement du régime spécial : exonération totale (100 %) pendant 4 ans pour les entreprises créées en 2024 et 2025."
+
+duree_exoneration_totale:
+  description: >
+    Durée (en années) de l'exonération totale pour le régime spécial
+    (LF 2018 / LF 2024 — entreprises créées en 2018-2019 ou 2024-2025).
+  values:
+    2017-01-01:
+      value: 4
+
+duree_regime_degressif:
+  description: >
+    Durée (en années) du régime de déduction dégressive de droit commun
+    (loi n° 2017-8 du 14/02/2017).
+  values:
+    2017-01-01:
+      value: 4
+
+deduction_exoneration_totale:
+  description: >
+    Taux appliqué chaque année pendant la période d'exonération totale
+    (régime spécial LF 2018 / LF 2024 — entreprises créées en 2018-2019 ou 2024-2025).
+  values:
+    2017-01-01:
+      value: 1.00
+
+deduction_annee_1:
+  description: Quote-part du bénéfice déductible la première année d'activité (100 %)
+  values:
+    2017-01-01:
+      value: 1.00
+
+deduction_annee_2:
+  description: Quote-part du bénéfice déductible la deuxième année d'activité (75 %)
+  values:
+    2017-01-01:
+      value: 0.75
+
+deduction_annee_3:
+  description: Quote-part du bénéfice déductible la troisième année d'activité (50 %)
+  values:
+    2017-01-01:
+      value: 0.50
+
+deduction_annee_4:
+  description: Quote-part du bénéfice déductible la quatrième année d'activité (25 %)
+  values:
+    2017-01-01:
+      value: 0.25

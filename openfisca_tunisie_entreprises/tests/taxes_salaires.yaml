@@ -1,0 +1,369 @@
+# Tests YAML — TFP, FOPROLOS, comptabilisées et taux effectif
+#
+# Complète les tests Python test_taxes_salaires.py (taux bruts, déductions)
+# en ajoutant les variables comptabilisées et le taux effectif global.
+#
+# Exécution : openfisca test openfisca_tunisie_entreprises/tests/test_taxes_salaires.yaml
+
+
+# ---------------------------------------------------------------------------
+# TFP comptabilisée (= TFP brute, déductible en charges)
+# ---------------------------------------------------------------------------
+
+- name: "TFP comptabilisée industrie = TFP brute (masse salariale × 1 %)"
+  # Masse salariale : 400 000 DT ; secteur industrie → taux 1 %
+  # TFP brute = 4 000 DT = TFP comptabilisée
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 400000.0
+        secteur_activite: industries_manufacturieres
+  output:
+    entreprises:
+      ent_1:
+        tfp_comptabilisee: 4000.0
+
+
+- name: "TFP comptabilisée services = TFP brute (masse salariale × 2 %)"
+  # Masse salariale : 300 000 DT ; secteur services → taux 2 %
+  # TFP brute = 6 000 DT = TFP comptabilisée
+  # (la déduction pour formation réduit le versement à l'ATFP, pas la charge comptabilisée)
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 300000.0
+        secteur_activite: services
+  output:
+    entreprises:
+      ent_1:
+        tfp_comptabilisee: 6000.0
+
+
+# ---------------------------------------------------------------------------
+# FOPROLOS comptabilisé (= FOPROLOS = masse salariale × 1 %)
+# ---------------------------------------------------------------------------
+
+- name: "FOPROLOS comptabilisé = FOPROLOS (masse salariale × 1 %)"
+  # Masse salariale : 500 000 DT → FOPROLOS = 5 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 500000.0
+  output:
+    entreprises:
+      ent_1:
+        foprolos_comptabilise: 5000.0
+
+
+# ---------------------------------------------------------------------------
+# Charges sociales et fiscales (intégration)
+# ---------------------------------------------------------------------------
+
+- name: "Charges sociales et fiscales = CNSS + TFP + FOPROLOS + TCL"
+  # Masse salariale : 200 000 DT, secteur commerce (TFP 2 %)
+  # CA local établissement : 500 000 DT (TCL due = 1 000 DT)
+  #
+  # CNSS patronal (fourni directement)   :  30 000
+  # TFP brute comptabilisée (2 %)        :   4 000
+  # FOPROLOS (1 %)                       :   2 000
+  # TCL (500 000 × 0,2 %)               :   1 000
+  # Total charges_sociales_et_fiscales   :  37 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        chiffre_affaires_local_etablissement: 500000.0
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 200000.0
+        secteur_activite: commerce
+        cotisations_sociales_patronales: 30000.0
+  output:
+    entreprises:
+      ent_1:
+        charges_sociales_et_fiscales: 37000.0
+
+
+# ---------------------------------------------------------------------------
+# Taux effectif des taxes assises sur salaires
+# ---------------------------------------------------------------------------
+
+- name: "Taux effectif taxes salaires — secteur industrie (TFP 1 % + FOPROLOS 1 % = 2 %)"
+  # Masse salariale : 500 000 DT ; industrie ; pas de formation engagée
+  # TFP nette = TFP brute = 5 000 DT (taux 1 %)
+  # FOPROLOS = 5 000 DT (taux 1 %)
+  # taxes_assises_salaires = 10 000 DT
+  # taux_effectif = 10 000 / 500 000 = 2 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 500000.0
+        secteur_activite: industries_manufacturieres
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_taxes_salaires: 0.02
+
+
+- name: "Taux effectif taxes salaires — secteur services (TFP 2 % + FOPROLOS 1 % = 3 %)"
+  # Masse salariale : 400 000 DT ; services ; pas de formation
+  # TFP nette = 8 000 DT (2 %) ; FOPROLOS = 4 000 DT (1 %)
+  # taxes_assises_salaires = 12 000 DT
+  # taux_effectif = 12 000 / 400 000 = 3 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 400000.0
+        secteur_activite: services
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_taxes_salaires: 0.03
+
+
+- name: "Taux effectif taxes salaires réduit par la déduction formation"
+  # Masse salariale : 500 000 DT ; industrie ; formation = 3 000 DT
+  # TFP brute = 5 000 DT ; formation déductible = 3 000 DT
+  # TFP nette = 5 000 − 3 000 = 2 000 DT
+  # FOPROLOS = 5 000 DT
+  # taxes_assises_salaires = 7 000 DT
+  # taux_effectif = 7 000 / 500 000 = 1,4 %
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        salaires_et_appointements: 500000.0
+        secteur_activite: industries_manufacturieres
+        depenses_formation_engagees: 3000.0
+  output:
+    entreprises:
+      ent_1:
+        taux_effectif_taxes_salaires: 0.014
+
+
+# ---------------------------------------------------------------------------
+# Tests traduits depuis test_taxes_salaires.py — variables de base TFP/FOPROLOS
+# ---------------------------------------------------------------------------
+
+- name: "Taux TFP secteur industrie — 1 %"
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+  output:
+    entreprises:
+      ent_1:
+        taux_tfp: 0.01
+
+
+- name: "Taux TFP secteur services — 2 %"
+  period: "2023"
+  relative_error_margin: 0.001
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: services
+  output:
+    entreprises:
+      ent_1:
+        taux_tfp: 0.02
+
+
+- name: "TFP brute industrie = masse salariale × 1 %"
+  # 500 000 DT × 1 % = 5 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+  output:
+    entreprises:
+      ent_1:
+        tfp_brute: 5000.0
+
+
+- name: "TFP brute commerce = masse salariale × 2 %"
+  # 500 000 DT × 2 % = 10 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: commerce
+  output:
+    entreprises:
+      ent_1:
+        tfp_brute: 10000.0
+
+
+- name: "Déduction formation plafonnée à la TFP brute"
+  # Industrie → TFP brute = 5 000 DT ; formation = 8 000 DT > 5 000 → déductible = 5 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+        depenses_formation_engagees: 8000.0
+  output:
+    entreprises:
+      ent_1:
+        depenses_formation_deductibles: 5000.0
+
+
+- name: "TFP nette = TFP brute − dépenses de formation (si formation < TFP brute)"
+  # Industrie : TFP brute = 5 000 DT ; formation = 2 000 DT → TFP nette = 3 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+        depenses_formation_engagees: 2000.0
+  output:
+    entreprises:
+      ent_1:
+        tfp_nette: 3000.0
+
+
+- name: "TFP nette = 0 si les dépenses de formation couvrent toute la TFP brute"
+  # TFP brute = 5 000 DT ; formation = 5 000 DT → TFP nette = 0
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+        depenses_formation_engagees: 5000.0
+  output:
+    entreprises:
+      ent_1:
+        tfp_nette: 0.0
+
+
+- name: "FOPROLOS = masse salariale × 1 %"
+  # 500 000 DT × 1 % = 5 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+  output:
+    entreprises:
+      ent_1:
+        foprolos: 5000.0
+
+
+- name: "Total taxes assises sur salaires — industrie sans formation (TFP + FOPROLOS)"
+  # TFP nette = 5 000 DT + FOPROLOS = 5 000 DT = 10 000 DT
+  period: "2023"
+  absolute_error_margin: 1.0
+  input:
+    etablissements:
+      etab_1:
+        est_exonere_tcl: true
+    entreprises:
+      ent_1:
+        siege_social:
+          - etab_1
+        masse_salariale_brute: 500000.0
+        secteur_activite: industries_manufacturieres
+  output:
+    entreprises:
+      ent_1:
+        taxes_assises_salaires: 10000.0

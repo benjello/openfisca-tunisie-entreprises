@@ -1,0 +1,36 @@
+description: >
+  Taux de déduction des bénéfices provenant des opérations d'exportation.
+  Applicable uniquement aux entreprises partiellement exportatrices (non ETE).
+  La déduction = quote-part du résultat fiscal × taux.
+
+  Historique :
+    Jusqu'au 31/12/2020 : deux tiers (2/3) du résultat provenant de l'export
+    (Art. 11 bis § V CIRPPIS).
+    À compter du 1er janvier 2021 : supprimée (Art. 41 LF 2019-78 — les entreprises
+    en activité avant le 31/12/2018 ont bénéficié du régime jusqu'au 31/12/2020).
+
+metadata:
+  unit: /1
+  reference:
+    1990-01-01:
+      title: "Loi n° 89-114 du 30/12/1989, Art. 11 bis § V CIRPPIS"
+    2021-01-01:
+      title: "Loi de finances n° 2019-78 du 23/12/2019, Art. 41 (suppression à compter du 01/01/2021)"
+  official_journal_date:
+    1990-01-01: "1989-12-30"
+    2021-01-01: "2019-12-23"
+  notes:
+    1990-01-01:
+    - title: "Déduction des deux tiers (2/3) du bénéfice provenant de l'exportation. Dispositif d'incitation aux exportations hors régime ETE."
+    2021-01-01:
+    - title: "Suppression de la déduction export dans le cadre de la refonte des avantages fiscaux (loi n° 2017-8 du 14/02/2017). La LF 2019 a accordé une prolongation transitoire jusqu'au 31/12/2020 pour les entreprises en activité avant le 31/12/2018."
+
+taux:
+  description: >
+    Fraction du résultat fiscal d'exportation déductible de la base IS.
+    Deux tiers (2/3) jusqu'en 2020, puis nul à compter de 2021.
+  values:
+    1990-01-01:
+      value: 0.666667
+    2021-01-01:
+      value: 0.0

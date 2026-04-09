@@ -1,0 +1,30 @@
+description: >
+  Taux d'IS intermédiaire à 35 % applicable à certains secteurs spécifiques,
+  stable depuis LF 2014 et non relevé lors de la LF 2025 (contrairement au
+  taux majoré des banques/assurances, relevé à 40 %).
+  Secteurs concernés : établissements de paiement, sociétés d'investissement,
+  sociétés de recouvrement de créances, opérateurs de réseaux de
+  télécommunications, grandes surfaces commerciales, concessionnaires
+  automobiles, franchisés d'une marque ou enseigne étrangère.
+
+metadata:
+  unit: /1
+  reference:
+    1994-01-01:
+      title: "Loi de finances n° 93-125 du 27/12/1993, Art. 49-I-3 CIRPPIS"
+    2024-01-01:
+      title: "Loi de finances n° 2024-48 du 09/12/2024, Art. 37-3 (maintien explicite à 35 %)"
+  official_journal_date:
+    1994-01-01: "1993-12-27"
+    2024-01-01: "2024-12-09"
+  notes:
+    1994-01-01:
+    - title: "Ces secteurs ont été maintenus à 35 % lors de l'abaissement du taux normal à 25 % (LF 2014) puis à 15 % (LF 2021)"
+    2024-01-01:
+    - title: "La LF 2025 confirme explicitement le maintien à 35 % pour ces secteurs (non relevés à 40 % contrairement aux banques)"
+
+values:
+  # Ces secteurs étaient déjà au taux majoré (35 %) avant LF 2014 ;
+  # ils ont été explicitement maintenus à 35 % lorsque le taux normal a baissé.
+  1994-01-01:
+    value: 0.35
