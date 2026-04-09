@@ -5,8 +5,8 @@ résidents. Elle finance la formation professionnelle via l'ATFP (Agence Tunisie
 de la Formation Professionnelle).
 
 Mécanisme :
-  TFP brute  = masse salariale brute × taux (1 % industrie / 2 % autres)
-  TFP nette  = max(TFP brute − dépenses de formation justifiées, 0)
+  TFP brute  = masse salariale brute * taux (1 % industrie / 2 % autres)
+  TFP nette  = max(TFP brute - dépenses de formation justifiées, 0)
 
 Les dépenses de formation effectivement engagées et dûment justifiées sont
 déductibles de la TFP brute, dans la limite de celle-ci.
@@ -19,12 +19,10 @@ Références :
 """
 
 import numpy as np
-
 from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise
 from openfisca_tunisie_entreprises.variables.caracteristiques_entreprise import SecteurActivite
-
 
 # ---------------------------------------------------------------------------
 # Critère de secteur (détermine le taux applicable)
@@ -89,7 +87,7 @@ class tfp_brute(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "TFP brute = masse salariale résidents × taux TFP"
+    label = "TFP brute = masse salariale résidents * taux TFP"
     reference = "Art. 31 CIRPPIS"
 
     def formula(entreprise, period):
@@ -136,7 +134,7 @@ class tfp_nette(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "TFP nette due = max(TFP brute − dépenses de formation déductibles, 0)"
+    label = "TFP nette due = max(TFP brute - dépenses de formation déductibles, 0)"
     reference = "Art. 32-33 CIRPPIS"
 
     def formula(entreprise, period):

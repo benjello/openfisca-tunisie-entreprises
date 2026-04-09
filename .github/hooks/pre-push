@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+set -e
+
+echo "Running ruff format..."
+uv run ruff format .
+
+echo "Running ruff check --fix --unsafe-fixes..."
+uv run ruff check --fix --unsafe-fixes .
+
+if ! git diff --quiet; then
+    echo ""
+    echo "Ruff modified files. Stage the fixes and push again:"
+    git diff --name-only
+    exit 1
+fi

@@ -17,11 +17,9 @@ Références principales :
 """
 
 import numpy as np
-
 from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise
-
 
 # ===========================================================================
 # RÉINTÉGRATIONS — charges comptabilisées mais non déductibles fiscalement
@@ -105,7 +103,10 @@ class reintegration_charges_vehicules_tourisme(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Réintégration : charges non déductibles sur véhicules de tourisme > 9 CV (amortissement, carburant, entretien excédentaires)"
+    label = (
+        "Réintégration : charges non déductibles sur véhicules de tourisme > 9 CV "
+        "(amortissement, carburant, entretien excédentaires)"
+    )
     reference = "Art. 14-5° CIRPPIS"
 
 
@@ -146,8 +147,17 @@ class total_reintegrations(Variable):
         jetons = entreprise("reintegration_jetons_presence", period)
         autres = entreprise("autres_reintegrations", period)
         return (
-            amendes + cadeaux + amortissements + provisions + interets
-            + injustifiees + paradis + quote_part + vehicules + jetons + autres
+            amendes
+            + cadeaux
+            + amortissements
+            + provisions
+            + interets
+            + injustifiees
+            + paradis
+            + quote_part
+            + vehicules
+            + jetons
+            + autres
         )
 
 
@@ -231,7 +241,10 @@ class est_secteur_eligible_amortissement_supplementaire(Variable):
     entity = Entreprise
     definition_period = YEAR
     label = "Le secteur est-il éligible à l'amortissement supplémentaire sur équipements industriels ?"
-    reference = "Art. 12 bis VIII CIRPPIS — exclusions : financier, énergie hors ENR, mines, immobilier, restauration, commerce, télécom"
+    reference = (
+        "Art. 12 bis VIII CIRPPIS — exclusions : financier, énergie hors ENR, "
+        "mines, immobilier, restauration, commerce, télécom"
+    )
     default_value = True
 
 
@@ -369,8 +382,17 @@ class total_deductions_extracomptables(Variable):
         interets_verts = entreprise("deduction_interets_emprunts_verts", period)
         autres = entreprise("autres_deductions", period)
         return (
-            dividendes + rs_lib + pv + reinvest + export + zones
-            + nouvelles + amort_supp + dons + interets_verts + autres
+            dividendes
+            + rs_lib
+            + pv
+            + reinvest
+            + export
+            + zones
+            + nouvelles
+            + amort_supp
+            + dons
+            + interets_verts
+            + autres
         )
 
 

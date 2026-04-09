@@ -1,13 +1,12 @@
 """Système socio-fiscal tunisien — fiscalité des entreprises."""
 
-import os
+from pathlib import Path
 
 from openfisca_core.taxbenefitsystems import TaxBenefitSystem
 
 from openfisca_tunisie_entreprises import entities
 
-
-COUNTRY_DIR = os.path.dirname(os.path.abspath(__file__))
+COUNTRY_DIR = Path(__file__).resolve().parent
 
 
 class TunisieEntreprisesTaxBenefitSystem(TaxBenefitSystem):
@@ -25,6 +24,7 @@ class TunisieEntreprisesTaxBenefitSystem(TaxBenefitSystem):
     CURRENCY = "DT"  # Dinar tunisien (code ISO : TND)
 
     def __init__(self):
+        """Initialise le système fiscal tunisien avec les entités, variables et paramètres."""
         super().__init__(entities.entities)
-        self.add_variables_from_directory(os.path.join(COUNTRY_DIR, "variables"))
-        self.load_parameters(os.path.join(COUNTRY_DIR, "parameters"))
+        self.add_variables_from_directory(COUNTRY_DIR / "variables")
+        self.load_parameters(COUNTRY_DIR / "parameters")

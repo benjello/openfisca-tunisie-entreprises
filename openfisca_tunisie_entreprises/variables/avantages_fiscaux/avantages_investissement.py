@@ -36,11 +36,14 @@ Références :
 """
 
 import numpy as np
-
 from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise
 
+# Constantes métier
+DUREE_EXONERATION_ETE = 10  # Art. 10 CII : 10 années d'exonération totale IS
+ZONE_PREMIER_GROUPE = 1  # Premier groupe de zones de développement régional
+ZONE_DEUXIEME_GROUPE = 2  # Deuxième groupe de zones de développement régional
 
 # ===========================================================================
 # ENTREPRISES TOTALEMENT EXPORTATRICES (ETE)
@@ -65,7 +68,7 @@ class est_regime_ete_actif(Variable):
     def formula(entreprise, period):
         ete = entreprise("est_totalement_exportatrice", period)
         annees = entreprise("annees_dans_regime_ete", period)
-        return ete & (annees <= 10)
+        return ete & (annees <= DUREE_EXONERATION_ETE)
 
 
 class exoneration_is_ete(Variable):
@@ -96,7 +99,7 @@ class taux_is_ete_apres_exoneration(Variable):
         # Après 10 ans : IS à taux réduit (15 % / 2 depuis LF 2021, soit 7,5 %)
         # Note : la législation a évolué — on utilise ici le demi-taux
         taux_ete = taux_normal / 2
-        return np.where(ete & (annees > 10), taux_ete, taux_normal)
+        return np.where(ete & (annees > DUREE_EXONERATION_ETE), taux_ete, taux_normal)
 
 
 # ===========================================================================
@@ -124,7 +127,7 @@ class duree_exoneration_zone(Variable):
         # Zone 1 (premier groupe) : 5 ans d'exonération
         # Zone 2 (deuxième groupe) : 10 ans d'exonération
         return np.select(
-            [zone == 1, zone == 2],
+            [zone == ZONE_PREMIER_GROUPE, zone == ZONE_DEUXIEME_GROUPE],
             [5, 10],
             default=0,
         )
@@ -176,7 +179,7 @@ class taux_deduction_supplementaire_zone(Variable):
         zone = entreprise("zone_developpement_regional", period)
         # Après la période d'exonération : déduction de 25 % (zone 1) ou 50 % (zone 2) du bénéfice
         return np.select(
-            [zone == 1, zone == 2],
+            [zone == ZONE_PREMIER_GROUPE, zone == ZONE_DEUXIEME_GROUPE],
             [0.25, 0.50],
             default=0.0,
         )
@@ -294,7 +297,10 @@ class est_secteur_eligible_exoneration_creation(Variable):
     entity = Entreprise
     definition_period = YEAR
     label = "Le secteur est-il éligible à la déduction pour nouvelles entreprises ?"
-    reference = "Art. 11 CIRPPIS (Loi n° 2017-8) — exclusions : financier, énergie hors ENR, mines, immobilier, restauration, commerce, télécom"
+    reference = (
+        "Art. 11 CIRPPIS (Loi n° 2017-8) — exclusions : financier, énergie hors ENR, "
+        "mines, immobilier, restauration, commerce, télécom"
+    )
     default_value = True
 
 
@@ -327,7 +333,7 @@ class quotite_deduction_creation(Variable):
         # Régime droit commun : déduction dégressive (durée et taux issus des paramètres)
         duree_degressif = p.duree_regime_degressif
         quotite_degressive = np.select(
-            [annees == 1, annees == 2, annees == 3, annees == duree_degressif],
+            [annees == 1, annees == 2, annees == 3, annees == duree_degressif],  # noqa: PLR2004
             [p.deduction_annee_1, p.deduction_annee_2, p.deduction_annee_3, p.deduction_annee_4],
             default=0.0,
         )

@@ -34,7 +34,6 @@ from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise
 
-
 # ===========================================================================
 # CÔTÉ DÉBITEUR — RS collectées par l'entreprise et versées au Trésor
 # ===========================================================================
@@ -359,7 +358,7 @@ class solde_is_final(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Solde IS final = IS net après avantages − RS subies − acomptes payés"
+    label = "Solde IS final = IS net après avantages - RS subies - acomptes payés"
     reference = "Art. 51 et 52 bis CIRPPIS"
 
     def formula(entreprise, period):
