@@ -118,6 +118,8 @@ jobs:
     runs-on: ubuntu-24.04
     needs: [check-for-functional-changes]
     if: needs.check-for-functional-changes.outputs.status == 'success'
+    permissions:
+      contents: write
     env:
       PYPI_USERNAME: __token__
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
