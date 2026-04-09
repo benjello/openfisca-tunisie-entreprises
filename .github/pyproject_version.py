@@ -11,7 +11,8 @@ def get_version():
     version_match = re.search(r'^version\s*=\s*"([\d.]*)"', content, re.MULTILINE)
     if version_match:
         return version_match.group(1)
-    raise Exception("Package version not found in pyproject.toml")
+    msg = "Package version not found in pyproject.toml"
+    raise Exception(msg)
 
 
 if __name__ == "__main__":
