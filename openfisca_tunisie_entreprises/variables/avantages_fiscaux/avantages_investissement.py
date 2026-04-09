@@ -41,9 +41,9 @@ from openfisca_core.model_api import YEAR, Variable
 from openfisca_tunisie_entreprises.entities import Entreprise
 
 # Constantes métier
-DUREE_EXONERATION_ETE = 10    # Art. 10 CII : 10 années d'exonération totale IS
-ZONE_PREMIER_GROUPE = 1       # Premier groupe de zones de développement régional
-ZONE_DEUXIEME_GROUPE = 2      # Deuxième groupe de zones de développement régional
+DUREE_EXONERATION_ETE = 10  # Art. 10 CII : 10 années d'exonération totale IS
+ZONE_PREMIER_GROUPE = 1  # Premier groupe de zones de développement régional
+ZONE_DEUXIEME_GROUPE = 2  # Deuxième groupe de zones de développement régional
 
 # ===========================================================================
 # ENTREPRISES TOTALEMENT EXPORTATRICES (ETE)
