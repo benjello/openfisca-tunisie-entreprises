@@ -8,6 +8,8 @@ clean:
 
 install:
 	uv sync --dev
+	cp .github/hooks/pre-push .git/hooks/pre-push
+	chmod +x .git/hooks/pre-push
 
 build: clean
 	uv build
