@@ -36,6 +36,7 @@ dev = [
 include = ["openfisca_tunisie_entreprises", "openfisca_tunisie_entreprises.*"]
 
 [tool.ruff]
+exclude = [".github"]
 target-version = "py310"
 line-length = 120
 lint.select = ["ALL"]
