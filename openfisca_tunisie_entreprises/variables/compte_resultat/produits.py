@@ -23,7 +23,6 @@ from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise, Etablissement
 
-
 # ---------------------------------------------------------------------------
 # Ventes de marchandises (compte 70)
 # ---------------------------------------------------------------------------

@@ -8,10 +8,10 @@ Flux de calcul :
                      - Déficits antérieurs reportés
                      (planché à 0 : un déficit fiscal n'est pas imposable)
 
-  2. IS brut = Résultat fiscal × taux IS applicable (par catégorie)
+  2. IS brut = Résultat fiscal * taux IS applicable (par catégorie)
 
   3. TMI (Taux Minimum d'Imposition)
-       = CA brut × 0,2 % (depuis LF 2013 — Art. 49 ter CIRPPIS)
+       = CA brut * 0,2 % (depuis LF 2013 — Art. 49 ter CIRPPIS)
 
   4. IS dû avant dégrèvement = max(IS brut, TMI)
        — TMI non applicable si résultat fiscal ≤ 0
@@ -23,7 +23,7 @@ Flux de calcul :
 
   6. IS net dû = IS dû avant dégrèvement - Dégrèvement
 
-  7. Acomptes provisionnels payés (3 × 30 % de l'IS N-1)
+  7. Acomptes provisionnels payés (3 * 30 % de l'IS N-1)
 
   8. Solde IS à payer (ou crédit) = IS net dû - Acomptes payés
 
@@ -35,12 +35,10 @@ Références :
 """
 
 import numpy as np
-
 from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise
 from openfisca_tunisie_entreprises.variables.caracteristiques_entreprise import CategorieIS
-
 
 # ===========================================================================
 # RÉSULTAT FISCAL
@@ -132,7 +130,7 @@ class is_brut(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "IS brut = résultat fiscal × taux IS applicable"
+    label = "IS brut = résultat fiscal * taux IS applicable"
     reference = "Art. 49 CIRPPIS"
 
     def formula(entreprise, period):
@@ -202,7 +200,7 @@ class tmi_est_applicable(Variable):
         deficitaire = entreprise("est_en_situation_deficitaire", period)
         anciennete = entreprise("annees_activite", period)
         # TMI applicable uniquement si : non exonérée, non déficitaire, et > 5 ans
-        return ~exoneree & ~deficitaire & (anciennete > 5)
+        return ~exoneree & ~deficitaire & (anciennete > 5)  # noqa: PLR2004
 
 
 # ===========================================================================
@@ -252,7 +250,7 @@ class degrevement_reinvestissement(Variable):
         is_avant = entreprise("is_du_avant_degrevement", period)
         resultat = entreprise("resultat_fiscal", period)
         reinvesti = entreprise("montant_reinvesti_eligible", period)
-        # Le dégrèvement est égal au montant réinvesti × taux IS,
+        # Le dégrèvement est égal au montant réinvesti * taux IS,
         # mais plafonné à 35 % du bénéfice net réinvesti et à l'IS dû
         plafond_benefice = 0.35 * resultat
         degrevement_brut = np.minimum(reinvesti, plafond_benefice)
@@ -298,7 +296,7 @@ class acomptes_is_payes(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Acomptes IS payés dans l'année (3 × 30 % de l'IS N-1)"
+    label = "Acomptes IS payés dans l'année (3 * 30 % de l'IS N-1)"
     reference = "Art. 51 CIRPPIS (échéances : 25 juin, 25 sept., 25 déc.)"
 
     def formula(entreprise, period, parameters):

@@ -19,7 +19,6 @@ from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise, Etablissement
 
-
 # ---------------------------------------------------------------------------
 # Coût des ventes / achats consommés (comptes 60)
 # ---------------------------------------------------------------------------
@@ -148,6 +147,7 @@ class cotisations_sociales_patronales(Variable):
 # tfp_comptabilisee    → définie dans variables/taxes_assises_salaires/tfp.py
 # foprolos_comptabilise → définie dans variables/taxes_assises_salaires/foprolos.py
 # tcl_comptabilisee     → définie dans variables/impots/tcl.py
+
 
 class charges_sociales_et_fiscales(Variable):
     value_type = float

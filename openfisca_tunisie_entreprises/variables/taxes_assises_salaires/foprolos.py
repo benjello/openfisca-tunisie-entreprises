@@ -4,7 +4,7 @@ Contribution obligatoire des employeurs du secteur privé au financement
 de la construction de logements pour leurs salariés.
 
 Mécanisme :
-  FOPROLOS = masse salariale brute × 1 %
+  FOPROLOS = masse salariale brute * 1 %
 
   — Aucune déduction possible (contrairement à la TFP).
   — Déductible fiscalement comme charge d'exploitation.
@@ -26,7 +26,7 @@ class foprolos(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Contribution FOPROLOS = masse salariale brute × 1 %"
+    label = "Contribution FOPROLOS = masse salariale brute * 1 %"
     reference = "Loi n° 77-56 du 3 août 1977 ; Art. 28 CIRPPIS"
 
     def formula(entreprise, period, parameters):

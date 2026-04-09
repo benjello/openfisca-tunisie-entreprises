@@ -13,7 +13,6 @@ from openfisca_core.model_api import (
 
 from openfisca_tunisie_entreprises.entities import Entreprise, Etablissement
 
-
 # ---------------------------------------------------------------------------
 # Énumérations
 # ---------------------------------------------------------------------------

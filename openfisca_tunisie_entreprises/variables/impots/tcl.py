@@ -6,7 +6,7 @@ activité industrielle, commerciale ou professionnelle.
 Elle est perçue au profit des collectivités locales (communes, gouvernorats).
 
 Mécanisme (par établissement) :
-  TCL brute  = CA brut local de l'établissement × 0,2 %
+  TCL brute  = CA brut local de l'établissement * 0,2 %
   TCL due    = max(TCL brute, minimum légal)
                sauf si l'établissement est exonéré
 
@@ -22,11 +22,9 @@ Références :
 """
 
 import numpy as np
-
 from openfisca_core.model_api import YEAR, Variable
 
 from openfisca_tunisie_entreprises.entities import Entreprise, Etablissement
-
 
 # ===========================================================================
 # NIVEAU ÉTABLISSEMENT — calcul unitaire
@@ -46,7 +44,7 @@ class tcl_etablissement_avant_minimum(Variable):
     unit = "currency"
     entity = Etablissement
     definition_period = YEAR
-    label = "TCL brute de l'établissement avant application du minimum légal (CA local × 0,2 %)"
+    label = "TCL brute de l'établissement avant application du minimum légal (CA local * 0,2 %)"
     reference = "Art. 45 loi 97-11 ; paramètre taxes_entreprises.tcl.taux"
 
     def formula(etablissement, period, parameters):

@@ -26,7 +26,7 @@ class marge_brute(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Marge brute (chiffre d'affaires − coût des ventes)"
+    label = "Marge brute (chiffre d'affaires - coût des ventes)"
 
     def formula(entreprise, period):
         ca = entreprise("chiffre_affaires_brut", period)
@@ -39,7 +39,7 @@ class resultat_exploitation(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Résultat d'exploitation (I − II)"
+    label = "Résultat d'exploitation (I - II)"
     reference = "NCT 03 — État de résultat"
 
     def formula(entreprise, period):
@@ -53,7 +53,7 @@ class resultat_financier(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Résultat financier (III − IV)"
+    label = "Résultat financier (III - IV)"
     reference = "NCT 03 ; NCT 25"
 
     def formula(entreprise, period):
@@ -81,7 +81,7 @@ class resultat_extraordinaire(Variable):
     unit = "currency"
     entity = Entreprise
     definition_period = YEAR
-    label = "Résultat extraordinaire (V − VI)"
+    label = "Résultat extraordinaire (V - VI)"
     reference = "NCT 03"
 
     def formula(entreprise, period):

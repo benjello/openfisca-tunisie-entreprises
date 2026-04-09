@@ -11,7 +11,6 @@ Voir : https://openfisca.org/doc/coding-the-legislation/50_entities.html
 
 from openfisca_core.entities import build_entity
 
-
 Entreprise = build_entity(
     key="entreprise",
     plural="entreprises",
