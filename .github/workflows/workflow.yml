@@ -1,3 +1,5 @@
+# When changing supported Python versions, update branch protection "Required status checks"
+# in GitHub Settings > Branches: remove obsolete job names (e.g. build (3.9, ubuntu-24.04)).
 name: OpenFisca Tunisie Entreprises
 
 on:
@@ -35,6 +37,8 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all the tags
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
@@ -74,16 +78,53 @@ jobs:
       - name: Run tests
         run: make test
 
-  deploy:
+  check-version-and-changelog:
     runs-on: ubuntu-24.04
     needs: [lint, test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all the tags
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+      - uses: astral-sh/setup-uv@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: uv-${{ runner.os }}-${{ env.DEFAULT_PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
+      - name: Install dependencies
+        run: uv sync --dev
+      - name: Check version number has been properly updated
+        run: "${GITHUB_WORKSPACE}/.github/is-version-number-acceptable.sh"
+
+  # GitHub Actions does not have a halt job option, to stop from deploying if no functional changes were found.
+  # We build a separate job to substitute the halt option.
+  # The `deploy` job is dependent on the output of the `check-for-functional-changes` job.
+  check-for-functional-changes:
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main' # Only triggered for the `main` branch
+    needs: [check-version-and-changelog]
+    outputs:
+      status: ${{ steps.stop-early.outputs.status }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all the tags
+      - id: stop-early
+        run: if "${GITHUB_WORKSPACE}/.github/has-functional-changes.sh" ; then echo "status=success" >> $GITHUB_OUTPUT ; fi
+
+  deploy:
+    runs-on: ubuntu-24.04
+    needs: [check-for-functional-changes]
+    if: needs.check-for-functional-changes.outputs.status == 'success'
     env:
+      PYPI_USERNAME: __token__
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Fetch all the tags
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
@@ -96,5 +137,7 @@ jobs:
         run: uv sync --dev
       - name: Build package
         run: make build
-      - name: Publish to PyPI
-        run: uv run twine upload dist/* --username __token__ --password $PYPI_TOKEN
+      - name: Upload a Python package to PyPI
+        run: uv run twine upload dist/* --username $PYPI_USERNAME --password $PYPI_TOKEN
+      - name: Publish a git tag
+        run: "${GITHUB_WORKSPACE}/.github/publish-git-tag.sh"
