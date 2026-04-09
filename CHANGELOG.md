@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 - [#2](https://github.com/benjello/openfisca-tunisie-entreprises/pull/2)
+
+* Amélioration technique.
+* Périodes concernées : aucune.
+* Détails :
+  - Ajout de la permission `contents: write` sur le job CI de déploiement pour autoriser la publication du tag git.
+
 ## 0.1.1 - [#2](https://github.com/benjello/openfisca-tunisie-entreprises/pull/2)
 
 * Amélioration technique.
