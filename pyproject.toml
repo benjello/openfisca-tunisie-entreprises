@@ -27,10 +27,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "openfisca-ai",
     "pytest>=8.3.2",
     "ruff>=0.6.9,<1",
     "yamllint>=1.35.1",
 ]
+
+[tool.uv.sources]
+openfisca-ai = { git = "https://github.com/benjello/openfisca-ai.git" }
 
 [tool.setuptools.packages.find]
 include = ["openfisca_tunisie_entreprises", "openfisca_tunisie_entreprises.*"]
