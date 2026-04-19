@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0
+
+* Amélioration technique.
+* Périodes concernées : aucune.
+* Détails :
+  - Ajout d'openfisca-ai comme dépendance dev pour la validation et l'audit.
+  - Ajout de workflows CI : validation openfisca-ai, review IA multi-provider, changelog automatique.
+  - Ajout de la configuration MCP (`.mcp.json`) pour Claude Code, Cursor, Gemini, etc.
+  - Ajout de templates GitLab (issue bug/feature, merge request) en français.
+  - Passage du guide de contribution (`CONTRIBUTING.md`) en français avec sections uv, pre-commit, openfisca-ai.
+  - Ajout de la validation openfisca-ai dans la checklist du template PR GitHub.
+  - Reformatage du code Python avec ruff.
+
 ## 0.1.2 - [#2](https://github.com/benjello/openfisca-tunisie-entreprises/pull/2)
 
 * Amélioration technique.

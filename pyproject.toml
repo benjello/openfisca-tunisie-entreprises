@@ -4,7 +4,7 @@ requires = ["setuptools>=61"]
 
 [project]
 name = "openfisca_tunisie_entreprises"
-version = "0.1.2"
+version = "0.2.0"
 description = "OpenFisca Rules as Code — fiscalité des entreprises en Tunisie (IS, TCL, TFP, FOPROLOS)."
 readme = "README.md"
 keywords = ["microsimulation", "tax", "tunisia", "entreprise", "IS", "rules-as-code"]
@@ -27,10 +27,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "openfisca-ai",
     "pytest>=8.3.2",
     "ruff>=0.6.9,<1",
     "yamllint>=1.35.1",
 ]
+
+[tool.uv.sources]
+openfisca-ai = { git = "https://github.com/benjello/openfisca-ai.git" }
 
 [tool.setuptools.packages.find]
 include = ["openfisca_tunisie_entreprises", "openfisca_tunisie_entreprises.*"]

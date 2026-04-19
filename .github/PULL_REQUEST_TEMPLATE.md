@@ -23,6 +23,7 @@ Quelques conseils à prendre en compte :
 - [ ] Jetez un coup d'œil au [guide de contribution](https://github.com/benjello/openfisca-tunisie-entreprises/blob/main/CONTRIBUTING.md).
 - [ ] Regardez s'il n'y a pas une [proposition introduisant ces mêmes changements](https://github.com/benjello/openfisca-tunisie-entreprises/pulls).
 - [ ] Documentez votre contribution avec des références législatives.
+- [ ] Validez avec `openfisca-ai` : `uv run openfisca-ai validate-parameters .`
 - [ ] Mettez à jour ou ajoutez des tests correspondant à votre contribution.
 - [ ] Augmentez le [numéro de version](https://semver.org/) dans [`pyproject.toml`](https://github.com/benjello/openfisca-tunisie-entreprises/blob/main/pyproject.toml).
 - [ ] Mettez à jour le [`CHANGELOG.md`](https://github.com/benjello/openfisca-tunisie-entreprises/blob/main/CHANGELOG.md).

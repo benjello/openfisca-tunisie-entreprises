@@ -914,6 +914,14 @@ wheels = [
 ]
 
 [[package]]
+name = "openfisca-ai"
+version = "0.1.1"
+source = { git = "https://github.com/benjello/openfisca-ai.git#b7f821a283759f7462c1823044d4277ddf2977c3" }
+dependencies = [
+    { name = "pyyaml" },
+]
+
+[[package]]
 name = "openfisca-core"
 version = "44.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -945,7 +953,7 @@ web-api = [
 
 [[package]]
 name = "openfisca-tunisie-entreprises"
-version = "0.1.2"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "openfisca-core", extra = ["web-api"] },
@@ -953,6 +961,7 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "openfisca-ai" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "yamllint" },
@@ -970,6 +979,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "openfisca-ai", marker = "extra == 'dev'", git = "https://github.com/benjello/openfisca-ai.git" },
     { name = "openfisca-core", extras = ["web-api"], specifier = ">=44" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.9,<1" },
